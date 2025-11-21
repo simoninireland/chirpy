@@ -1,14 +1,31 @@
 # Makefile for St Andrews bird counting sensor suite
 #
 # Copyright (C) 2025 Simon Dobson
+#
+# This is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This software is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this software. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
 
 # ----- Sources -----
 
 # Source code
-SOURCES_CODE =
+SOURCES_CODE = \
+	acoustic_birds/__init__.py \
+	acoustic_birds/audiofiles.py \
+	acoustic_birds/classify.py
 SOURCES_TESTS_INIT = test/__init__.py
-SOURCES_TESTS =
+SOURCES_TESTS = \
+	test/test_basic.py
 TESTSUITE = test
 
 # Extras for the build and packaging system
@@ -38,6 +55,7 @@ PERCH_MODEL = google/bird-vocalization-classifier/tensorFlow2/perch_v2_cpu
 
 # Base commands
 PYTHON = python3
+PYTEST = pytest
 PIP = pip
 GIT = git
 ETAGS = etags
@@ -72,7 +90,7 @@ REQUIREMENTS = requirements.txt
 DEV_REQUIREMENTS = dev-requirements.txt
 
 # Constructed commands
-ACTIVATE = . $(VENV)/bin/activate
+RUN_TESTS = $(PYTEST) $(SOURCES_TESTS)
 
 
 # ----- Top-level targets -----
@@ -82,11 +100,10 @@ help:
 	@make usage
 
 # Run tests for all versions of Python we're interested in
-test: env Makefile setup.py
+test: env Makefile
 	$(ACTIVATE) && $(RUN_TESTS)
 
 # Build a development venv from the requirements in the repo
-.PHONY: env
 env: $(VENV) models
 
 $(VENV):
@@ -95,8 +112,13 @@ $(VENV):
 	$(ACTIVATE) && $(PIP) install -U pip wheel && $(CHDIR) $(VENV) && $(PIP) install -r requirements.txt
 
 # Download the machine learning models
-.PHONY: models
-models:
+#
+# The BirdNET models on Zeonodo are openly availanle.
+# Downloading the Perch model from Kaggle assumes that you have
+# Kaggle API keys installed in ~/.kaggle/kaggle.json
+models: $(MODELS_DIR)
+
+$(MODELS_DIR):
 	$(MKDIR) $(MODELS_DIR)
 	for fn in $(BIRDNET_MODEL_FILES); do $(CURL) -o $(MODELS_DIR)/$$fn $(BIRDNET_MODEL_BASE_URL)/$$fn?download=1; done
 	$(ACTIVATE) && $(PYTHON) -c "import kagglehub; path = kagglehub.model_download('$(PERCH_MODEL)'); print(path)"

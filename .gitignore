@@ -17,6 +17,9 @@ wheels/
 .installed.cfg
 *.egg
 
+# Python intermediate files
+*.pyc
+
 # Sphinx documentation
 doc/_build/
 
@@ -38,3 +41,7 @@ TAGS
 .envrc
 .direnv/
 .pypirc
+
+# Data
+models/
+data/
