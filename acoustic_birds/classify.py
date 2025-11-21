@@ -25,7 +25,6 @@ from typing import Tuple, List
 
 
 # Global model
-modelFile : str = None
 interpreter : tflite.Interpreter = None
 inputLayerIndex : int = -1
 outputLayerIndex : int = -1
@@ -39,9 +38,7 @@ def loadModel(fn):
 
     @param fn: the model filename
     """
-    global modelFile, interpreter, inputLayerIndex, outputLayerIndex
-
-    modelFile = fn
+    global interpreter, inputLayerIndex, outputLayerIndex
 
     interpreter = tflite.Interpreter(model_path=fn)
     interpreter.allocate_tensors()
