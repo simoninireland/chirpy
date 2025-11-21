@@ -21,14 +21,15 @@ try:
     import tflite_runtime.interpreter as tflite  # type: ignore
 except ModuleNotFoundError:
     from tensorflow import lite as tflite
+from typing import Tuple, List
 
 
 # Global model
-modelFile = None
-interpreter = None
-inputLayerIndex = None
-outputLayerIndex = None
-labels = None
+modelFile : str = None
+interpreter : tflite.Interpreter = None
+inputLayerIndex : int = -1
+outputLayerIndex : int = -1
+labels : List[Tuple[str, str]] = []
 
 
 def loadModel(fn):
@@ -68,7 +69,7 @@ def loadLabels(fn):
             labels.append((sci, com))
 
 
-def segment(sig, sampleRate, segment, overlap):
+def segment(sig, sampleRate, segment, overlap) -> List[np.ndarray]:
     """Split a signal into fixed-length segments.
 
     @param sig: the signal
@@ -132,7 +133,7 @@ def mostLikelyIndex(prediction):
     return mostConfidentPerSample[mostConfidentSample]
 
 
-def identify(mli):
+def identify(mli) -> Tuple[str, str]:
     """Return the labels associated with sample mli.
 
     @param mli: the most likely index of the prediction classifier
