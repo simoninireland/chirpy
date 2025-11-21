@@ -1,0 +1,11 @@
+* St Andrews bird counting experiments
+
+  The code in this repo supports automated acoustic ecological surveys
+  using local on-device machine leaning models to classify bird calls
+  and report them back for analysis.
+
+
+  [[mailto:simon.dobson@st-andrews.ac.uk][Simon Dobson]] and [[mailto:alison.johnston@st-andrews.ac.uk][Alison Johnston]]
+
+  School of Computer Science and Centre for Research in Ecological and
+  Environmental Monitoring, University of St Andrews, Scotland UK.

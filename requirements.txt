@@ -1,0 +1,5 @@
+tensorflow
+tflite
+tflite_micro
+soundfile
+librosa
