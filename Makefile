@@ -113,7 +113,7 @@ $(VENV):
 
 # Download the machine learning models
 #
-# The BirdNET models on Zeonodo are openly availanle.
+# The BirdNET models on Zeonodo are openly available.
 # Downloading the Perch model from Kaggle assumes that you have
 # Kaggle API keys installed in ~/.kaggle/kaggle.json
 models: $(MODELS_DIR)
