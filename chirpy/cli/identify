@@ -21,7 +21,7 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 rootDir = os.path.dirname(os.path.dirname(cwd))
 
 # load everything else
-from chirpy import loadModel, loadLabels, load, segment, classify, mostLikelyIndex, identify, report
+from chirpy import loadModel, loadLabels, load, segment, classify, mostLikelyIndex, identify
 from sys import argv
 
 # find the model files relative to the project root
@@ -42,7 +42,6 @@ def main(sampleFile):
     prediction = classify(segments)
     mli = mostLikelyIndex(prediction)
     print(identify(mli)[1])
-    print(report(identify(mli)[1]))
 
 
 if __name__ == "__main__":
