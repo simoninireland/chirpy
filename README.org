@@ -9,5 +9,7 @@
 
   [[mailto:simon.dobson@st-andrews.ac.uk][Simon Dobson]] and [[mailto:alison.johnston@st-andrews.ac.uk][Alison Johnston]]
 
-  School of Computer Science and Centre for Research in Ecological and
-  Environmental Monitoring, University of St Andrews, Scotland UK.
+  School of Computer Science
+  Centre for Research into Ecological and Environmental Monitoring
+  Institute of Engineering
+  University of St Andrews, Scotland UK.
