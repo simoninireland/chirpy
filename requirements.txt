@@ -3,3 +3,4 @@ tflite
 tflite_micro
 soundfile
 librosa
+pyaudio
