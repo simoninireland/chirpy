@@ -17,3 +17,4 @@
 
 from .audiofiles import load
 from .classify import loadModel, loadLabels, segment, classify, mostLikelyIndex, identify
+from .report import report
