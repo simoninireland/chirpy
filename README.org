@@ -1,8 +1,10 @@
-* St Andrews bird counting experiments
+* chirpy, the St Andrews bird counting experiments
 
   The code in this repo supports automated acoustic ecological surveys
   using local on-device machine leaning models to classify bird calls
   and report them back for analysis.
+
+  Currently very much in development.
 
 
   [[mailto:simon.dobson@st-andrews.ac.uk][Simon Dobson]] and [[mailto:alison.johnston@st-andrews.ac.uk][Alison Johnston]]

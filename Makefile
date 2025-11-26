@@ -1,4 +1,4 @@
-# Makefile for St Andrews bird counting sensor suite
+# Makefile for chirpy, the St Andrews bird counting sensor suite
 #
 # Copyright (C) 2025 Simon Dobson
 #
@@ -15,14 +15,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this software. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
+PACKAGENAME = chirpy
+
 
 # ----- Sources -----
 
 # Source code
 SOURCES_CODE = \
-	acoustic_birds/__init__.py \
-	acoustic_birds/audiofiles.py \
-	acoustic_birds/classify.py
+	chirpy/__init__.py \
+	chirpy/audiofiles.py \
+	chirpy/classify.py
 SOURCES_TESTS_INIT = test/__init__.py
 SOURCES_TESTS = \
 	test/test_basic.py
@@ -116,8 +118,6 @@ $(VENV):
 # The BirdNET models on Zeonodo are openly available.
 # Downloading the Perch model from Kaggle assumes that you have
 # Kaggle API keys installed in ~/.kaggle/kaggle.json
-models: $(MODELS_DIR)
-
 $(MODELS_DIR):
 	$(MKDIR) $(MODELS_DIR)
 	for fn in $(BIRDNET_MODEL_FILES); do $(CURL) -o $(MODELS_DIR)/$$fn $(BIRDNET_MODEL_BASE_URL)/$$fn?download=1; done
