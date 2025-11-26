@@ -43,6 +43,9 @@ def main(sampleFile):
     mli = mostLikelyIndex(prediction)
     print(identify(mli)[1])
 
+    # from chirpy import report
+    # report(identify(mli)[1])
+
 
 if __name__ == "__main__":
     sampleFile = argv[1]
