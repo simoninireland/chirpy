@@ -4,3 +4,5 @@ tflite_micro
 soundfile
 librosa
 pyaudio
+paho-mqtt
+types-paho-mqtt
