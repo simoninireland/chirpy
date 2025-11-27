@@ -16,5 +16,6 @@
 # along with this software. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
 from .audiofiles import load
+from .audiosample import record
 from .classify import loadModel, loadLabels, segment, classify, mostLikelyIndex, identify
 from .report import report

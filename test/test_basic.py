@@ -37,7 +37,7 @@ sampleFile = os.path.join(rootDir, "sample.wav")
 
 class TestBasics(unittest.TestCase):
 
-    def testSample(self):
+    def testIdentify(self):
         """Test we can analyse an audio sample."""
 
         # load a model and its labels
@@ -73,3 +73,9 @@ class TestBasics(unittest.TestCase):
         # report via MQTT
         scientific, common = identify(mli)
         report(f"{scientific}_{common}")
+
+
+    def testSample(self):
+        """Test we can read an audio sample."""
+        sig = record(2, sampleRate=44100)
+        self.assertEqual(len(sig), 2 * 44100)
