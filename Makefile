@@ -24,7 +24,9 @@ PACKAGENAME = chirpy
 SOURCES_CODE = \
 	chirpy/__init__.py \
 	chirpy/audiofiles.py \
-	chirpy/classify.py
+	chirpy/classify.py \
+	chirpy/report.py \
+	chirpy/audiosample.py
 SOURCES_TESTS_INIT = test/__init__.py
 SOURCES_TESTS = \
 	test/test_basic.py
@@ -32,7 +34,8 @@ TESTSUITE = test
 
 # Extras for the build and packaging system
 SOURCES_EXTRA = \
-	README.org
+	README.org \
+	chirpy.py.in
 SOURCES_GENERATED = \
 	MANIFEST \
 	TAGS \
