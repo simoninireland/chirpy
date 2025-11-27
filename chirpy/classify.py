@@ -136,6 +136,4 @@ def identify(mli) -> Tuple[str, str]:
     @param mli: the most likely index of the prediction classifier
     @returns: a pair of scientific and common name as strings
     """
-    global labels
-
     return labels[mli]
