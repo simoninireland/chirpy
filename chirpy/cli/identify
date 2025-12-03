@@ -21,7 +21,7 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 rootDir = os.path.dirname(os.path.dirname(cwd))
 
 # load everything else
-from chirpy import loadModel, loadLabels, load, segment, classify, mostLikelyIndex, identify
+import chirpy
 from sys import argv
 
 # find the model files relative to the project root
@@ -31,20 +31,19 @@ labelFile = os.path.join(rootDir, "models/labels/en_uk.txt")
 
 def main(sampleFile):
     # load the model
-    loadModel(modelFile)
-    loadLabels(labelFile)
+    chirpy.loadModel(modelFile)
+    chirpy.loadLabels(labelFile)
 
     # load a signal
-    sig, sampleRate = load(sampleFile)
-    segments = segment(sig, sampleRate, 3, 1)
+    sig, sampleRate = chirpy.load(sampleFile)
+    segments = chirpy.segment(sig, sampleRate, 3, 1)
 
     # classify the signal
-    prediction = classify(segments)
-    mli = mostLikelyIndex(prediction)
-    print(identify(mli)[1])
+    prediction = chirpy.classify(segments)
+    mli = chirpy.mostLikelyIndex(prediction)
+    print(chirpy.identify(mli)[1])
 
-    # from chirpy import report
-    # report(identify(mli)[1])
+    # chirpy.report(chirpy.identify(mli)[1])
 
 
 if __name__ == "__main__":

@@ -25,7 +25,7 @@ import sys
 sys.path.append(rootDir)
 
 # load everything else
-from chirpy import *
+import chirpy
 import numpy as np
 import unittest
 
@@ -41,41 +41,40 @@ class TestBasics(unittest.TestCase):
         """Test we can analyse an audio sample."""
 
         # load a model and its labels
-        loadModel(modelFile)
-        loadLabels(labelFile)
+        chirpy.loadModel(modelFile)
+        chirpy.loadLabels(labelFile)
 
         # load a signal
-        sig, sampleRate = load(sampleFile)
-        segments = segment(sig, sampleRate, 3, 1)
+        sig, sampleRate = chirpy.load(sampleFile)
+        segments = chirpy.segment(sig, sampleRate, 3, 1)
 
         # classify the signal
-        prediction = classify(segments)
-        mli = mostLikelyIndex(prediction)
-        self.assertEqual(identify(mli)[0], "Fringilla coelebs")
+        prediction = chirpy.classify(segments)
+        mli = chirpy.mostLikelyIndex(prediction)
+        self.assertEqual(chirpy.identify(mli)[0], "Fringilla coelebs")
 
 
     def testReporting(self):
         """Test we can report through MQTT."""
 
         # load a model and its labels
-        loadModel(modelFile)
-        loadLabels(labelFile)
+        chirpy.loadModel(modelFile)
+        chirpy.loadLabels(labelFile)
 
         # load a signal
-        sig, sampleRate = load(sampleFile)
-        segments = segment(sig, sampleRate, 3, 1)
+        sig, sampleRate = chirpy.load(sampleFile)
+        segments = chirpy.segment(sig, sampleRate, 3, 1)
 
         # classify the signal
-        prediction = classify(segments)
-        mli = mostLikelyIndex(prediction)
-        print(identify(mli)[1])
+        prediction = chirpy.classify(segments)
+        mli = chirpy.mostLikelyIndex(prediction)
 
         # report via MQTT
-        scientific, common = identify(mli)
-        report(f"{scientific}_{common}")
+        scientific, common = chirpy.identify(mli)
+        chirpy.report(f"{scientific}_{common}")
 
 
     def testSample(self):
         """Test we can read an audio sample."""
-        sig = record(2, sampleRate=44100)
+        sig = chirpy.record(2, sampleRate=44100)
         self.assertEqual(len(sig), 2 * 44100)
