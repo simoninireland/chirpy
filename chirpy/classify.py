@@ -16,7 +16,6 @@
 # along with this software. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
 import numpy as np
-import tensorflow as tf
 try:
     import tflite_runtime.interpreter as tflite  # type: ignore
 except ModuleNotFoundError:
