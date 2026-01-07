@@ -15,18 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this software. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
-import librosa
+import soundfile as sf
 
 
 def load(fn, sampleRate = None):
     """Load an audio file and return the signal.
 
     @param fn: the file name
-    @param sampleRate: the sample rate in Hz (defaults to the file's sample rate)
-    @returns: the signal as an array and the actaal sample rate"""
-    if sampleRate is None:
-        sampleRate = librosa.get_samplerate(fn)
-
-    sig, rate = librosa.load(fn, sr=sampleRate, offset=0, mono=True, res_type="kaiser_fast")
+    @param sampleRate: the sample rate in Hz (defaults to the file's own sample rate)
+    @returns: the signal as an array and the actual sample rate"""
+    sig, rate = sf.read(fn, samplerate=sampleRate)
 
     return sig, rate
