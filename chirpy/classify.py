@@ -1,6 +1,6 @@
 # Signal classification
 #
-# Copyright (C) 2025 Simon Dobson
+# Copyright (C) 2025--2026 Simon Dobson
 #
 # This is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,14 +17,22 @@
 
 import numpy as np
 try:
-    import tflite_runtime.interpreter as tflite  # type: ignore
+    # prefer Tensorflow Lite for Microcontrollers
+    from ai_edge_litert.interpreter import Interpreter
+    print("Running on AI edge")
 except ModuleNotFoundError:
-    from tensorflow import lite as tflite
+    try:
+        from tflite_runtime.interpreter import Interpreter
+        print("Running on TFLite for Micro")
+    except ModuleNotFoundError:
+        # fall-back to Tensorflow Lite
+        from tensorflow.lite.interpreter import Interpreter
+        print("Running on TFLite")
 from typing import Tuple, List
 
 
 # Global model
-interpreter : tflite.Interpreter = None
+interpreter : Interpreter = None
 inputLayerIndex : int = -1
 outputLayerIndex : int = -1
 labels : List[Tuple[str, str]] = []
@@ -39,7 +47,7 @@ def loadModel(fn):
     """
     global interpreter, inputLayerIndex, outputLayerIndex
 
-    interpreter = tflite.Interpreter(model_path=fn)
+    interpreter = Interpreter(model_path=fn)
     interpreter.allocate_tensors()
 
     # extract the input and output tensors
@@ -59,7 +67,7 @@ def loadLabels(fn):
     global labels
 
     labels = []
-    with open(fn, "r") as lls:
+    with open(fn, "r", encoding="utf-8") as lls:
         for line in lls:
             sci, com = line.strip().split("_")
             labels.append((sci, com))
@@ -120,13 +128,14 @@ def mostLikelyIndex(prediction):
     and then the best (most confident) across the segments.
 
     @param prediction: the prediction scores per segment
-    @returns: the most likely index overall
+    @returns: a pair of the most likely index overall and its corresponding confidence
     """
     mostConfidentPerSample = np.argmax(prediction, axis=1)
     confidencePerSample = [ prediction[i][mostConfidentPerSample[i]] for i in range(len(mostConfidentPerSample)) ]
     mostConfidentSample = np.argmax(confidencePerSample)
+    mostConfident = max(confidencePerSample)
 
-    return mostConfidentPerSample[mostConfidentSample]
+    return mostConfidentPerSample[mostConfidentSample], mostConfident
 
 
 def identify(mli) -> Tuple[str, str]:

@@ -22,6 +22,7 @@ rootDir = os.path.dirname(os.path.dirname(cwd))
 
 # load everything else
 import chirpy
+from datetime import datetime
 from sys import argv
 
 # find the model files relative to the project root
@@ -35,13 +36,25 @@ def main(sampleFile):
     chirpy.loadLabels(labelFile)
 
     # load a signal
+    now = datetime.now()
     sig, sampleRate = chirpy.load(sampleFile)
+    loadTime = datetime.now()
     segments = chirpy.segment(sig, sampleRate, 3, 1)
+    segmentTime = datetime.now()
 
     # classify the signal
     prediction = chirpy.classify(segments)
-    mli = chirpy.mostLikelyIndex(prediction)
+    classifyTime = datetime.now()
+
+    # report
+    mli, confidence = chirpy.mostLikelyIndex(prediction)
     print(chirpy.identify(mli)[1])
+    print(confidence)
+    print(chirpy.makeObservation(mli, confidence))
+
+    print("Load time = " + (loadTime - now))
+    print("Signal segmantation time = " + (segmentTime - loadTime))
+    print("Classification time = " + (classifyTime - segmentTime))
 
     # chirpy.report(chirpy.identify(mli)[1])
 

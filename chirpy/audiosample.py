@@ -1,6 +1,6 @@
 # Audio sampling
 #
-# Copyright (C) 2025 Simon Dobson
+# Copyright (C) 2025--2026 Simon Dobson
 #
 # This is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,36 +14,75 @@
 #
 # You should have received a copy of the GNU General Public License
 
-import pyaudio
+from pyaudio import PyAudio, paFloat32
+import os
 import struct
 import numpy as np
 
 
-device = pyaudio.PyAudio()
+# Silencing the junk that PyAudio emits when it starts
+# See https://stackoverflow.com/questions/67765911/how-do-i-silence-pyaudios-noisy-output
+
+class pyaudio:
+    def __init__(self):
+        # Open a pair of null files
+        self.null_fds = [os.open(os.devnull, os.O_RDWR) for x in range(2)]
+
+        # Save the actual stdout (1) and stderr (2) file descriptors.
+        self.save_fds = [os.dup(1), os.dup(2)]
+
+        self.pyaudio = None
 
 
-def record(sampleTime, sampleRate = 44100):
+    def __enter__(self) -> PyAudio:
+        # Assign the null pointers to stdout and stderr.
+        os.dup2(self.null_fds[0], 1)
+        os.dup2(self.null_fds[1], 2)
+
+        self.pyaudio = PyAudio()
+
+        return self.pyaudio
+
+
+    def __exit__(self, *_):
+        # We leave audio running when we exit the context manager
+        #self.pyaudio.terminate()
+
+        # Re-assign the real stdout/stderr back to (1) and (2)
+        os.dup2(self.save_fds[0], 1)
+        os.dup2(self.save_fds[1], 2)
+
+        # Close all file descriptors
+        for fd in self.null_fds + self.save_fds:
+            os.close(fd)
+
+
+# Audio device access
+device : PyAudio = None
+with pyaudio() as silenced:
+    device = silenced
+
+chunkSize = 1024
+sampleRate = 44100
+stream = device.open(format=paFloat32,
+                     channels=1,
+                     rate=sampleRate,
+                     frames_per_buffer=chunkSize,
+                     input=True)
+
+
+def record(sampleTime):
     """Record a sample from the default audio device.
 
     @param sampleTime: the time in seconds to record
-    @param sampleRate: (optional) the sample rate (defaults to 441009Hz)
     @returns: the signal as an array of floats"""
-
-    chunkSize = 1024
-    str = device.open(format=pyaudio.paFloat32,
-                      channels=1,
-                      rate=sampleRate,
-                      frames_per_buffer=chunkSize,
-                      input=True)
-
-    # take the recording
     samples = sampleTime * sampleRate
     chunks = int(np.ceil(samples / chunkSize))
     buffer = np.ndarray(samples, dtype=np.float32)
     start = 0
-    for k in range(chunks):
+    for _ in range(chunks):
         end = min(start + chunkSize, samples)
-        data = str.read(end - start)
+        data = stream.read(end - start)
 
         # unpack each 4-byte sample as a float32
         b = 0
