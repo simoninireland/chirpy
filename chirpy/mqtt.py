@@ -1,6 +1,6 @@
 # MQTT event reporting
 #
-# Copyright (C) 2025 Simon Dobson
+# Copyright (C) 2025--2026 Simon Dobson
 #
 # This is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -106,5 +106,8 @@ def mqttReportObservation(observation, topic = None):
         topic = config.mqtt_topic
 
     payload = json.dumps(observation)
-    chirpy.logger.debug(f"Reporting observation {payload}")
-    mqttClient.publish(topic, payload)
+    chirpy.logger.info(f"Reporting observation {payload}")
+    rc = mqttClient.publish(topic, payload)
+    rc.wait_for_publish(1)
+    if not rc.is_published():
+        chirpy.logger.error(f"Observation possibly not published successfully (error code {rc.rc})")
