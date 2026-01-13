@@ -1,0 +1,55 @@
+#!/usr/bin/env python
+
+# Listening and classification script
+#
+# Copyright (C) 2025--2026 Simon Dobson
+#
+# This is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This software is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+
+import chirpy
+from sys import stdout, argv
+import time
+
+
+# find the project root directory
+import os
+cwd = os.path.dirname(os.path.realpath(__file__))
+rootDir = os.path.dirname(os.path.dirname(cwd))
+
+# find the model files relative to the project root
+modelFile = os.path.join(rootDir, "models/audio-model-int8.tflite")
+labelFile = os.path.join(rootDir, "models/labels/en_uk.txt")
+
+
+def main(sampleFile):
+    # load the model
+    chirpy.loadModel(modelFile)
+    chirpy.loadLabels(labelFile)
+
+    while True:
+        # load a signal
+        sig, sampleRate = chirpy.load(sampleFile)
+
+        # classify the signal
+        segments = chirpy.segment(sig, sampleRate, 3, 1)
+        prediction = chirpy.classify(segments)
+        mli, confidence = chirpy.mostLikelyIndex(prediction)
+
+        # report
+        chirpy.printObservation(mli, confidence)
+        time.sleep(5)
+
+
+if __name__ == "__main__":
+    sampleFile = argv[1]
+    main(sampleFile)
