@@ -3,4 +3,5 @@ soundfile
 librosa
 pyaudio
 paho-mqtt
+typing_extensions; python_version <= '3.7'
 types-paho-mqtt
