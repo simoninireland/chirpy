@@ -63,7 +63,7 @@ with pyaudio() as silenced:
     device = silenced
 
 chunkSize = 1024
-sampleRate = 44100
+sampleRate = 48000
 stream = device.open(format=paFloat32,
                      channels=1,
                      rate=sampleRate,
