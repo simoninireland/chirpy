@@ -45,3 +45,5 @@ TAGS
 # Data
 models/
 data/
+*.sqlite3?
+*.db
