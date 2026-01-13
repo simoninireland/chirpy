@@ -15,20 +15,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this software. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
+import chirpy
 import numpy as np
+from typing import Tuple, List
+
+# Import a version of Tensorflow
 try:
     # prefer Tensorflow Lite for Microcontrollers
     from ai_edge_litert.interpreter import Interpreter
-    #print("Running on AI edge")
+    chirpy.logger.debug("Running on AI edge")
 except ModuleNotFoundError:
     try:
         from tflite_runtime.interpreter import Interpreter
-        #print("Running on TFLite for Micro")
+        chirpy.logger.debug("Running on TFLite for Micro")
     except ModuleNotFoundError:
         # fall-back to Tensorflow Lite
         from tensorflow.lite.interpreter import Interpreter
-        #print("Running on TFLite")
-from typing import Tuple, List
+        chirpy.logger.debug("Running on TFLite")
 
 
 # Global model
@@ -55,6 +58,7 @@ def loadModel(fn):
     outputDetails = interpreter.get_output_details()
     inputLayerIndex = inputDetails[0]["index"]
     outputLayerIndex = outputDetails[0]["index"]
+    chirpy.logger.info(f"Loaded model from {fn}")
 
 
 def loadLabels(fn):
@@ -71,6 +75,7 @@ def loadLabels(fn):
         for line in lls:
             sci, com = line.strip().split("_")
             labels.append((sci, com))
+    chirpy.logger.info(f"Loaded labels from {fn}")
 
 
 def segment(sig, sampleRate, segment, overlap) -> List[np.ndarray]:

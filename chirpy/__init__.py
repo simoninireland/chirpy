@@ -1,6 +1,6 @@
 # Package file for chirpy, the St Andrews bird counting sensor suite
 #
-# Copyright (C) 2025 Simon Dobson
+# Copyright (C) 2025--2026 Simon Dobson
 #
 # This is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,6 +14,11 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this software. If not, see <http://www.gnu.org/licenses/gpl.html>.
+
+import logging
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+from . import logger
 
 from .audiofiles import load
 from .audiosample import record

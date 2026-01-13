@@ -20,7 +20,7 @@ import paho.mqtt.client as mqtt
 import json
 import config
 from copy import copy
-from typing import Hashable, Callable
+from typing import Callable
 
 
 # Global MQTT client connection
@@ -37,7 +37,7 @@ def onConnect(client, userData, flags, reason_code, properties):
 
     for topic in mqttTopics.keys():
         mqttClient.subscribe(topic)
-        print(f"Subscribed to {topic}")
+        chirpy.logger.info(f"Subscribed to topic {topic}")
 
 
 def onMessage(client, userData, message):
@@ -49,7 +49,7 @@ def onMessage(client, userData, message):
     topic, payload = message.topic, message.payload
     callback = mqttTopics.get(topic, None)
     if callback is None:
-        print("Received an unexpected message...")
+        chirpy.logger.error(f"Received a message on a topic we didn't subscribe to ({topic})")
     else:
         observation = json.loads(payload)
         callback(observation)
@@ -83,7 +83,6 @@ def mqttConnect(host = None, username = None, password = None, topics = None):
     mqttClient.username_pw_set(username, password)
     if topics is not None:
         if isinstance(topics, dict):
-            print("grabbed hash table")
             mqttTopics = copy(topics)
         else:
             mqttTopics = dict()
@@ -93,7 +92,7 @@ def mqttConnect(host = None, username = None, password = None, topics = None):
         mqttClient.on_connect = onConnect
         mqttClient.on_message = onMessage
     mqttClient.connect(host)
-    print(f"Connected to MQTT broker at {host}")
+    chirpy.logger.info(f"Connected to MQTT broker at {host}")
     mqttClient.loop_start()
 
 
@@ -107,4 +106,5 @@ def mqttReportObservation(observation, topic = None):
         topic = config.mqtt_topic
 
     payload = json.dumps(observation)
+    chirpy.logger.debug(f"Reporting observation {payload}")
     mqttClient.publish(topic, payload)
