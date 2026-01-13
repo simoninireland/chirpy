@@ -1,4 +1,4 @@
-tflite_micro
+ai_edge_litert
 soundfile
 pyaudio
 paho-mqtt
