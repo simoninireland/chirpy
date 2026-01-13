@@ -67,7 +67,7 @@ sampleRate = 48000
 stream = device.open(format=paFloat32,
                      channels=1,
                      rate=sampleRate,
-                     frames_per_buffer=chunkSize,
+                     frames_per_buffer=chunkSize * 4,
                      input=True)
 
 
@@ -80,17 +80,16 @@ def record(sampleTime):
     chunks = int(np.ceil(samples / chunkSize))
     buffer = np.ndarray(samples, dtype=np.float32)
     start = 0
+    print(samples, chunks, chunkSize)
     for _ in range(chunks):
         end = min(start + chunkSize, samples)
+        print(start, end, end - start)
         data = stream.read(end - start)
 
         # unpack each 4-byte sample as a float32
-        b = 0
-        for i in range(end - start):
+        for b in range(0, len(data), 4):
             f = struct.unpack(">f", data[b:b + 4])[0]
-            buffer[start + i] = f
-            b += 4
+            buffer[start ] = f
+            start += 1
 
-        start += chunkSize
-
-    return buffer
+    return buffer, sampleRate

@@ -31,14 +31,14 @@ modelFile = os.path.join(rootDir, "models/audio-model-int8.tflite")
 labelFile = os.path.join(rootDir, "models/labels/en_uk.txt")
 
 
-def main(sampleFile):
+def main():
     # load the model
     chirpy.loadModel(modelFile)
     chirpy.loadLabels(labelFile)
 
     while True:
         # load a signal
-        sig, sampleRate = chirpy.load(sampleFile)
+        sig, sampleRate = chirpy.record(5)
 
         # classify the signal
         segments = chirpy.segment(sig, sampleRate, 3, 1)
@@ -51,5 +51,4 @@ def main(sampleFile):
 
 
 if __name__ == "__main__":
-    sampleFile = argv[1]
-    main(sampleFile)
+    main()

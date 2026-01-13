@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+
+# chirpy command-line recorder
+#
+# Copyright (C) 2025--2026 Simon Dobson
+#
+# This is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This software is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this software. If not, see <http://www.gnu.org/licenses/gpl.html>.
+
+import chirpy
+from sys import argv
+
+
+def main(sampleFile):
+    sig, sampleRate = chirpy.record(5)
+
+    print(f"{len(sig)} samples @ {sampleRate}Hz")
+    with open(sampleFile, "wb") as fd:
+        fd.write(sig)
+
+
+if __name__ == "__main__":
+    sampleFile = argv[1]
+    main(sampleFile)
