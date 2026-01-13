@@ -1,6 +1,6 @@
 # Configuration template for chirpy
 #
-# Copyright (C) 2025 Simon Dobson
+# Copyright (C) 2025--2026 Simon Dobson
 #
 # This is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,3 +30,8 @@ mqtt_host = ""
 mqtt_topic = ""
 mqtt_username = ""
 mqtt_password = ""
+
+
+# ---------- SQLite database ----------
+
+sqlite_db = "chirpy.db"

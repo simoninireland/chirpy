@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # chirpy command-line recogniser
 #
 # Copyright (C) 2025 Simon Dobson
@@ -34,29 +36,31 @@ def main(sampleFile):
     # load the model
     chirpy.loadModel(modelFile)
     chirpy.loadLabels(labelFile)
+    chirpy.mqttConnect()
 
     # load a signal
     now = datetime.now()
     sig, sampleRate = chirpy.load(sampleFile)
     loadTime = datetime.now()
-    segments = chirpy.segment(sig, sampleRate, 3, 1)
-    segmentTime = datetime.now()
 
     # classify the signal
+    segments = chirpy.segment(sig, sampleRate, 3, 1)
+    segmentTime = datetime.now()
     prediction = chirpy.classify(segments)
     classifyTime = datetime.now()
+    mli, confidence = chirpy.mostLikelyIndex(prediction)
 
     # report
-    mli, confidence = chirpy.mostLikelyIndex(prediction)
+    observation = chirpy.makeObservation(mli, confidence)
     print(chirpy.identify(mli)[1])
     print(confidence)
-    print(chirpy.makeObservation(mli, confidence))
+    print(observation)
 
-    print("Load time = " + (loadTime - now))
-    print("Signal segmantation time = " + (segmentTime - loadTime))
-    print("Classification time = " + (classifyTime - segmentTime))
+    print(f"Load time = {loadTime - now}")
+    print(f"Signal segmantation time = {segmentTime - loadTime}")
+    print(f"Classification time = {classifyTime - segmentTime}")
 
-    # chirpy.report(chirpy.identify(mli)[1])
+    chirpy.mqttReportObservation(observation)
 
 
 if __name__ == "__main__":

@@ -19,15 +19,15 @@ import numpy as np
 try:
     # prefer Tensorflow Lite for Microcontrollers
     from ai_edge_litert.interpreter import Interpreter
-    print("Running on AI edge")
+    #print("Running on AI edge")
 except ModuleNotFoundError:
     try:
         from tflite_runtime.interpreter import Interpreter
-        print("Running on TFLite for Micro")
+        #print("Running on TFLite for Micro")
     except ModuleNotFoundError:
         # fall-back to Tensorflow Lite
         from tensorflow.lite.interpreter import Interpreter
-        print("Running on TFLite")
+        #print("Running on TFLite")
 from typing import Tuple, List
 
 
@@ -115,8 +115,8 @@ def classify(segments):
     interpreter.set_tensor(inputLayerIndex, data)
     interpreter.invoke()
 
-    output = interpreter.get_tensor(outputLayerIndex)
-    prediction = flatSigmoid(output)
+    prediction = interpreter.get_tensor(outputLayerIndex)
+    #prediction = flatSigmoid(prediction)
 
     return prediction
 

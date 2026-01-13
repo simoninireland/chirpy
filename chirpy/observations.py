@@ -17,6 +17,8 @@
 
 import chirpy
 from datetime import datetime
+from sys import stdout
+import json
 
 
 def makeObservation(mli, confidence):
@@ -39,7 +41,21 @@ def makeObservation(mli, confidence):
     common, sci = chirpy.identify(mli)
 
     return {'timestamp': ts,
-            'id': mli,
-            'confidence': confidence,
+            'id': int(mli),
+            'confidence': float(confidence),
             'common': common,
             'sci': sci}
+
+
+def printObservation(mli, confidence, str = stdout):
+    """
+    Output an observation as a standard JSON record to str.
+
+    @param mli: the most likely index of the observed bird
+    @param confidence: the confidence of this observation
+    @param str: (optional) the stream (defaults to stdout)
+    """
+    observation = chirpy.makeObservation(mli, confidence)
+    print(json.dumps(observation), file=str)
+    print(file=str)
+    stdout.flush()
