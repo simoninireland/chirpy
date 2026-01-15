@@ -35,4 +35,8 @@ def record(sampleTime):
                  dtype=np.float32)
     sd.wait()
 
+    # convert the signal to a flat array of values, rather than an
+    # array of lists of per-channel values
+    sig = np.ravel(sig, order='C')
+
     return sig, sampleRate
