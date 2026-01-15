@@ -14,82 +14,25 @@
 #
 # You should have received a copy of the GNU General Public License
 
-from pyaudio import PyAudio, paFloat32
-import os
-import struct
+import sounddevice as sd
 import numpy as np
 
 
-# Silencing the junk that PyAudio emits when it starts
-# See https://stackoverflow.com/questions/67765911/how-do-i-silence-pyaudios-noisy-output
-
-class pyaudio:
-    def __init__(self):
-        # Open a pair of null files
-        self.null_fds = [os.open(os.devnull, os.O_RDWR) for x in range(2)]
-
-        # Save the actual stdout (1) and stderr (2) file descriptors.
-        self.save_fds = [os.dup(1), os.dup(2)]
-
-        self.pyaudio = None
-
-
-    def __enter__(self) -> PyAudio:
-        # Assign the null pointers to stdout and stderr.
-        os.dup2(self.null_fds[0], 1)
-        os.dup2(self.null_fds[1], 2)
-
-        self.pyaudio = PyAudio()
-
-        return self.pyaudio
-
-
-    def __exit__(self, *_):
-        # We leave audio running when we exit the context manager
-        #self.pyaudio.terminate()
-
-        # Re-assign the real stdout/stderr back to (1) and (2)
-        os.dup2(self.save_fds[0], 1)
-        os.dup2(self.save_fds[1], 2)
-
-        # Close all file descriptors
-        for fd in self.null_fds + self.save_fds:
-            os.close(fd)
-
-
-# Audio device access
-device : PyAudio = None
-with pyaudio() as silenced:
-    device = silenced
-
 chunkSize = 1024
 sampleRate = 48000
-stream = device.open(format=paFloat32,
-                     channels=1,
-                     rate=sampleRate,
-                     frames_per_buffer=chunkSize * 4,
-                     input=True)
 
 
 def record(sampleTime):
     """Record a sample from the default audio device.
 
     @param sampleTime: the time in seconds to record
-    @returns: the signal as an array of floats"""
+    @returns: the signal as an array of floats, and the sample rate"""
     samples = sampleTime * sampleRate
-    chunks = int(np.ceil(samples / chunkSize))
-    buffer = np.ndarray(samples, dtype=np.float32)
-    start = 0
-    print(samples, chunks, chunkSize)
-    for _ in range(chunks):
-        end = min(start + chunkSize, samples)
-        print(start, end, end - start)
-        data = stream.read(end - start)
 
-        # unpack each 4-byte sample as a float32
-        for b in range(0, len(data), 4):
-            f = struct.unpack(">f", data[b:b + 4])[0]
-            buffer[start ] = f
-            start += 1
+    sig = sd.rec(samples,
+                 samplerate=sampleRate,
+                 channels=1,
+                 dtype=np.float32)
+    sd.wait()
 
-    return buffer, sampleRate
+    return sig, sampleRate

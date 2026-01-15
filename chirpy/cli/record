@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# chirpy command-line recorder
+# chirpy command-line recorder/player to test the sound card
 #
 # Copyright (C) 2025--2026 Simon Dobson
 #
@@ -18,17 +18,41 @@
 # along with this software. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
 import chirpy
-from sys import argv
+import sounddevice as sd
+import threading
 
 
-def main(sampleFile):
-    sig, sampleRate = chirpy.record(5)
+data = None
+current_frame = 0
+event = threading.Event()
 
-    print(f"{len(sig)} samples @ {sampleRate}Hz")
-    with open(sampleFile, "wb") as fd:
-        fd.write(sig)
+
+def callback(outdata, frames, time, status):
+    global current_frame
+
+    if status:
+        print(status)
+    chunksize = min(len(data) - current_frame, frames)
+    outdata[:chunksize] = data[current_frame:current_frame + chunksize]
+    if chunksize < frames:
+        outdata[chunksize:] = 0
+        raise sd.CallbackStop()
+    current_frame += chunksize
+
+
+def main():
+    global data
+
+    data, sampleRate = chirpy.record(5)
+
+    stream = sd.OutputStream(samplerate=sampleRate,
+                             device=None,
+                             channels=1,
+                             callback=callback,
+                             finished_callback=event.set)
+    with stream:
+        event.wait()
 
 
 if __name__ == "__main__":
-    sampleFile = argv[1]
-    main(sampleFile)
+    main()
