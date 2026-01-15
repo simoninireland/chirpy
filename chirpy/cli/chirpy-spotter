@@ -45,8 +45,10 @@ def main():
         prediction = chirpy.classify(segments)
         mli, confidence = chirpy.mostLikelyIndex(prediction)
 
-        # report
-        chirpy.printObservation(mli, confidence)
+        if mli is not None:
+            # report
+            chirpy.printObservation(mli, confidence)
+
         time.sleep(5)
 
 
