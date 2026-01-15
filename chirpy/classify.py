@@ -108,8 +108,6 @@ def segment(sig, sampleRate, segment, overlap) -> List[np.ndarray]:
     # append silence to the end of the sample to make sure
     # all splits are the same length
     padding = np.zeros(shape=chunkSize, dtype=sig.dtype)
-    print(chunkSize, stepSize, lastChunk, len(padding))
-    print(sig[0], sig[1])
     data = np.concatenate((sig, padding))
 
     # chunk the signal into segments
