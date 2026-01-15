@@ -41,6 +41,20 @@ outputLayerIndex : int = -1
 labels : List[Tuple[str, str]] = []
 
 
+# Labels to ignore
+ignored = [944,    # Coyote
+           945,    # Grey wolf
+           1949,   # Dog
+           2818,   # Human non-vocal
+           2919,   # Human vocal
+           2820,   # Human whistle
+           2143,   # Engine
+           2325,   # Fireworks
+           2609,   # Gunshot  <-- should we keep this?
+           4862,   # Power tools
+           ]
+
+
 def loadModel(fn):
     """Load a classifier and configure it for use.
 
@@ -82,7 +96,7 @@ def segment(sig, sampleRate, segment, overlap) -> List[np.ndarray]:
     """Split a signal into fixed-length segments.
 
     @param sig: the signal
-    @param sampelRate: the sample rate
+    @param sampleRate: the sample rate
     @param segment: the size of a chunk in seconds
     @param overlap: the overlapping of segments in seconds
     @returns: a list of sub-signal chunks
@@ -94,6 +108,8 @@ def segment(sig, sampleRate, segment, overlap) -> List[np.ndarray]:
     # append silence to the end of the sample to make sure
     # all splits are the same length
     padding = np.zeros(shape=chunkSize, dtype=sig.dtype)
+    print(chunkSize, stepSize, lastChunk, len(padding))
+    print(sig[0], sig[1])
     data = np.concatenate((sig, padding))
 
     # chunk the signal into segments
@@ -132,6 +148,8 @@ def mostLikelyIndex(prediction):
     This finds the best (most confident) prediction in each segment,
     and then the best (most confident) across the segments.
 
+    If the result is an ignored label, return None for both index and confidence.
+
     @param prediction: the prediction scores per segment
     @returns: a pair of the most likely index overall and its corresponding confidence
     """
@@ -139,8 +157,13 @@ def mostLikelyIndex(prediction):
     confidencePerSample = [ prediction[i][mostConfidentPerSample[i]] for i in range(len(mostConfidentPerSample)) ]
     mostConfidentSample = np.argmax(confidencePerSample)
     mostConfident = max(confidencePerSample)
+    index =  mostConfidentPerSample[mostConfidentSample]
 
-    return mostConfidentPerSample[mostConfidentSample], mostConfident
+    if index in ignored:
+        # ignored label
+        return None, None
+
+    return index, mostConfident
 
 
 def identify(mli) -> Tuple[str, str]:
