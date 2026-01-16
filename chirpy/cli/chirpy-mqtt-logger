@@ -18,54 +18,15 @@
 
 import chirpy
 import config
-from os.path import exists, isfile
-import sqlite3
-
-
-# Global database connection
-connection = None
-
-
-def onFirstObservation(fn = None):
-    global connection
-
-    if fn is None:
-        fn = config.sqlite_db
-
-    if exists(fn):
-        if not isfile(fn):
-            # exists but not a file
-            raise ValueError(f"Can't open {fn} as database file")
-        else:
-            # exists and is file, connect
-            connection = sqlite3.connect(fn)
-    else:
-        # doesn't exist, create
-        connection = sqlite3.connect(fn)
-        cursor = connection.cursor()
-        cursor.execute("CREATE TABLE birds(timestamp, id, confidence, common_name, scientific_name)")
 
 
 def onObservation(observation):
-    global connection
-
-    # create the connection if this is the first observation
-    if connection is None:
-        onFirstObservation()
-
-    # record the observation
-    record = [observation["timestamp"],
-              observation["id"],
-              observation["confidence"],
-              observation["common"],
-              observation["sci"] ]
-    cursor = connection.cursor()
-    cursor.executemany("INSERT INTO birds VALUES(?, ?, ?, ?, ?)", [record])
-    connection.commit()
+    chirpy.dbRecordObservation(observation)
 
 
 def main():
     chirpy.mqttConnect(topics={config.mqtt_topic: onObservation})
+    chirpy.dbOpenConnection(config.sqlite_db)
 
     while True:
         pass

@@ -25,3 +25,4 @@ from .audiosample import record
 from .classify import loadModel, loadLabels, segment, classify, mostLikelyIndex, identify
 from .observations import makeObservation, printObservation
 from .mqtt import mqttConnect, mqttReportObservation
+from .db import dbOpenConnection, dbRecordObservation, dbAllObservationsOf
