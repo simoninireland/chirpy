@@ -52,13 +52,9 @@ def main(sampleFile):
 
     # report
     observation = chirpy.makeObservation(mli, confidence)
-    print(chirpy.identify(mli)[1])
-    print(confidence)
-    print(observation)
-
-    print(f"Load time = {loadTime - now}")
-    print(f"Signal segmantation time = {segmentTime - loadTime}")
-    print(f"Classification time = {classifyTime - segmentTime}")
+    chirpy.logger.info(f"Load time = {loadTime - now}")
+    chirpy.logger.info(f"Signal segmantation time = {segmentTime - loadTime}")
+    chirpy.logger.info(f"Classification time = {classifyTime - segmentTime}")
 
     chirpy.mqttReportObservation(observation)
 
