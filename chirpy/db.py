@@ -17,6 +17,7 @@
 
 import chirpy
 from os.path import exists, isfile
+from datetime import datetime
 import sqlite3
 
 
@@ -26,17 +27,27 @@ connection = None
 
 def dbCreate():
     """Create the tables for a new database."""
-    global connection
     cursor = connection.cursor()
 
     # create labels table from labels list
-    cursor.execute("CREATE TABLE bird(id, common_name, scientific_name)")
-    for i in range(len(chirpy.labels)):
-        common, sci = chirpy.labels[i]
-        cursor.execute("INSERT INTO bird VALUES(?, ?, ?)", [id, common, sci])
+    cursor.execute("""CREATE TABLE species(
+    id INTEGER,
+    common_name VARCHAR(200),
+    scientific_name VARCHAR(200)
+    )""")
+    labels = chirpy.getLabelsMapping()
+    for i in range(len(labels)):
+        common, sci = labels[i]
+        cursor.execute("INSERT INTO species VALUES(?, ?, ?)", [i, common, sci])
+    chirpy.logger.info(f"Created species table ({len(labels)} classes)")
 
     # create an empty spots table
-    cursor.execute("CREATE TABLE observation(timestamp, id, confidence)")
+    cursor.execute("""CREATE TABLE observation(
+    timestamp TIMESTANP,
+    id INTEGER,
+    confidence REAL
+    )""")
+    chirpy.logger.info("Created observations table")
 
     connection.commit()
 
@@ -65,17 +76,18 @@ def dbOpenConnection(fn):
         else:
             # exists and is file, connect
             connection = sqlite3.connect(fn)
+            chirpy.logger.info(f"Using database in {fn}")
     else:
         # doesn't exist, create it
+        chirpy.logger.info(f"Creating database in {fn}")
         connection = sqlite3.connect(fn)
-        createDatabase()
+        dbCreate()
 
 
 def dbRecordObservation(observation):
     """Record an observation into the database.
 
     @param observetion: the observation"""
-    global connection
     cursor = connection.cursor()
 
     cursor.execute("INSERT INTO observation VALUES(?, ?, ?)", [observation['timestamp'],
@@ -91,8 +103,30 @@ def dbAllObservationsOf(id):
 
     @param id: the species id
     @returns: a list of (timestamp, confidence) lists"""
-    global connection
     cursor = connection.cursor()
 
     cursor.execute("SELECT timestamp, confidence FROM observation WHERE id = ?", id)
+    return cursor.fetchall()
+
+
+def dbAllObservationsBetween(start, end = None):
+    """Returns a list of all the observations between two timestamps.
+
+    If the end timestamp is omitted, observations are selected up until now,
+
+    The list elements are timestamp, confidence, common name, and scientific name.
+    The list is ordered by timestamp, earliest observation first.
+
+    @param start: the start time
+    @param end: (optional) the end time (defaults to now)
+    @returns: the list of observations"""
+    cursor = connection.cursor()
+
+    if end is None:
+        end = datetime.now()
+
+    cursor.execute("""SELECT timestamp, confidence, common_name, scientific_name
+    FROM observation INNER JOIN species ON species.id = observation.id
+    WHERE timestamp BETWEEN ? AND ?
+    ORDER BY timestamp""", [start, end])
     return cursor.fetchall()
