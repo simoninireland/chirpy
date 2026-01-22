@@ -19,7 +19,7 @@ import chirpy
 import numpy as np
 from typing import Tuple, List
 
-# Import a version of Tensorflow
+# Import a version of Tensorflow Lite
 try:
     # prefer Tensorflow Lite for Microcontrollers
     from ai_edge_litert.interpreter import Interpreter
@@ -86,10 +86,11 @@ def loadLabels(fn):
 
     labels = []
     with open(fn, "r", encoding="utf-8") as lls:
+        chirpy.logger.info(f"Loaded labels from {fn}")
         for line in lls:
             sci, com = line.strip().split("_")
             labels.append((sci, com))
-    chirpy.logger.info(f"Loaded labels from {fn}")
+    chirpy.logger.info(f"{len(labels)} classes, including {len(ignored)} ignored")
 
 
 def segment(sig, sampleRate, segment, overlap) -> List[np.ndarray]:
@@ -157,11 +158,28 @@ def mostLikelyIndex(prediction):
     mostConfident = max(confidencePerSample)
     index =  mostConfidentPerSample[mostConfidentSample]
 
-    if index in ignored:
-        # ignored label
+    if labelIsIgnored(index):
+        # ignore the classification
         return None, None
 
     return index, mostConfident
+
+
+def getLabelsMapping():
+    """Return the mapping from species id to a pair of common and scientific names.
+
+    @returns: the label mapping"""
+    return labels
+
+
+def labelIsIgnored(id):
+    """Test whether a label is on the ignored list.
+
+    Ignpored labels refer to classes that aren't birds, and so shouldn't be recorded.
+
+    @param id: the label
+    @returns: True if the labelm should be ignored"""
+    return id in ignored
 
 
 def identify(mli) -> Tuple[str, str]:
