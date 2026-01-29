@@ -34,7 +34,7 @@ def onObservation(observation):
     # we need to open the connection here, not in the main routine,
     # because SQLite databases can only be used from the thread that
     # creates them
-    chirpy.dbOpenConnection(config.sqlite_db)
+    chirpy.dbOpenConnection(config.sqlitedb)
 
     chirpy.dbRecordObservation(observation)
     chirpy.logger.info(f"Recorded observation {json.dumps(observation)}")
@@ -42,7 +42,7 @@ def onObservation(observation):
 
 def main():
     chirpy.loadLabels(labelFile)
-    chirpy.mqttConnect(topics={config.mqtt_topic: onObservation})
+    chirpy.mqttConnect(topics={config.mqttTopic: onObservation})
 
     while True:
         pass

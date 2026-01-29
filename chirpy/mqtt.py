@@ -73,11 +73,11 @@ def mqttConnect(host = None, username = None, password = None, topics = None):
     global mqttClient, mqttTopics
 
     if host is None:
-        host = config.mqtt_host
+        host = config.mqttHost
     if username is None:
-        username = config.mqtt_username
+        username = config.mqttUsername
     if password is None:
-        password = config.mqtt_password
+        password = config.mqttPassword
 
     mqttClient = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     mqttClient.username_pw_set(username, password)
@@ -100,10 +100,10 @@ def mqttReportObservation(observation, topic = None):
     """Report an observation on MQTT against the given topic.
 
     @param observation: the observation
-    @param topic: (optional) topic to report against (defaults to configured mqtt_topic)
+    @param topic: (optional) topic to report against (defaults to configured mqttTopic)
     """
     if topic is None:
-        topic = config.mqtt_topic
+        topic = config.mqttTopic
 
     payload = json.dumps(observation)
     chirpy.logger.info(f"Reporting observation {payload}")

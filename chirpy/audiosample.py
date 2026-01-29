@@ -16,18 +16,20 @@
 
 import sounddevice as sd
 import numpy as np
+from sys import stdout
+import json
 
 
 chunkSize = 1024
 sampleRate = 48000
 
 
-def record(sampleTime):
+def record(duration):
     """Record a sample from the default audio device.
 
-    @param sampleTime: the time in seconds to record
+    @param duration: the time in seconds to record
     @returns: the signal as an array of floats, and the sample rate"""
-    samples = sampleTime * sampleRate
+    samples = duration * sampleRate
 
     sig = sd.rec(samples,
                  samplerate=sampleRate,
@@ -40,3 +42,33 @@ def record(sampleTime):
     sig = np.ravel(sig, order='C')
 
     return sig, sampleRate
+
+
+def makeSample(timestamp, duration, sig, sampleRate):
+    """Make a standard sample record from a sample.
+
+    @param timestamp: the start time of the signal
+    @param duration: the duration of the signal in seconds
+    @param sig: the signal as an array of floats
+    @paream sampleRate: the sample rate in Hz
+    @param str: (optional) the stream (defaults to stdout)
+    """
+    return {'timestamp': timestamp.isoformat(),
+            'duration': duration,
+            'sampleRate': sampleRate,
+            'signal': sig.tolist()}
+
+
+def printSample(timestamp, duration, sig, sampleRate, str = stdout):
+    """Output a sample as a standard JSON record to str.
+
+    @param timestamp: the start time of the signal
+    @param duration: the duration of the signal in seconds
+    @param sig: the signal as an array of floats
+    @paream sampleRate: the sample rate in Hz
+    @param str: (optional) the stream (defaults to stdout)
+    """
+    sample = makeSample(timestamp, duration, sig, sampleRate)
+    print(json.dumps(sample), file=str)
+    print(file=str)
+    str.flush()

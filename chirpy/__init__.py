@@ -15,13 +15,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this software. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
+import config
+
+# configure the system logger
 import logging
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
-from . import logger
+logLevel = logging.INFO
+try:
+    logLevel = int(config.logLevel)
+except(ValueError):
+    try:
+        logLevel = eval(config.logLevel)
+    except(RuntimeError):
+        logger.error(f"Can't set logging level to {config.logLevel}, using {logLevel}")
+logging.basicConfig(level=logLevel)
 
+
+from . import logger
 from .audiofiles import load
-from .audiosample import record
+from .audiosample import record, makeSample, printSample
 from .classify import loadModel, loadLabels, segment, classify, mostLikelyIndex, identify, getLabelsMapping
 from .observations import makeObservation, printObservation
 from .mqtt import mqttConnect, mqttReportObservation
