@@ -23,13 +23,20 @@ PACKAGENAME = chirpy
 # Source code
 SOURCES_CODE = \
 	chirpy/__init__.py \
+	chirpy/utils.py \
 	chirpy/audiofiles.py \
+	chirpy/audiosample.py \
 	chirpy/classify.py \
-	chirpy/report.py \
-	chirpy/audiosample.py
+	chirpy/db.py \
+	chirpy/mqtt.py \
+	chirpy/observations.py
 SOURCES_TESTS_INIT = test/__init__.py
 SOURCES_TESTS = \
-	test/test_basic.py
+	test/test_basic.py \
+	test/cli/identify \
+	test/cli/list \
+	test/cli/play \
+	test/cli/record
 TESTSUITE = test
 
 # Extras for the build and packaging system
@@ -40,6 +47,15 @@ SOURCES_GENERATED = \
 	MANIFEST \
 	TAGS \
 	setup.py
+
+# Documentation
+SOURCES_DOC_CONF = doc/conf.py
+SOURCES_DOC_BUILD_DIR = doc/_build
+SOURCES_DOC_BUILD_HTML_DIR = $(SOURCES_DOC_BUILD_DIR)/html
+SOURCES_DOC_ZIP = $(PACKAGENAME)-doc-$(VERSION).zip
+SOURCES_DOCUMENTATION = \
+	doc/index.rst \
+	doc/config.rst
 
 
 # ----- Models -----
@@ -96,6 +112,7 @@ DEV_REQUIREMENTS = dev-requirements.txt
 
 # Constructed commands
 RUN_TESTS = $(PYTEST) $(SOURCES_TESTS)
+RUN_SPHINX_HTML = PYTHONPATH=$(ROOT) $(CHDIR) doc && make html
 
 
 # ----- Top-level targets -----
@@ -107,6 +124,11 @@ help:
 # Run tests for all versions of Python we're interested in
 test: env Makefile
 	$(ACTIVATE) && $(RUN_TESTS)
+
+# Build the API documentation using Sphinx
+.PHONY: doc
+doc: env $(SOURCES_DOCUMENTATION) $(SOURCES_DOC_CONF)
+	$(ACTIVATE) && $(RUN_SPHINX_HTML)
 
 # Build a development venv from the requirements in the repo
 env: $(VENV) models
@@ -128,7 +150,7 @@ $(MODELS_DIR):
 
 # Clean up the distribution build
 clean:
-	$(RM) $(SOURCES_GENERATED)
+	$(RM) $(SOURCES_GENERATED) $(PACKAGENAME).egg-info dist $(SOURCES_DOC_BUILD_DIR) $(SOURCES_DOC_ZIP) dist build
 
 # Clean up everything, including the computational environment and models
 reallyclean: clean
@@ -148,6 +170,7 @@ TAGS:
 define HELP_MESSAGE
 Available targets:
    make test         run the test suite
+   make doc          generate the documentation
    make env          create a development virtual environment
    make clean        clean-up the build
    make reallyclean  clean up the virtualenv and models as well
