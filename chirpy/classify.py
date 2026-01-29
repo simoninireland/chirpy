@@ -30,12 +30,13 @@ except ModuleNotFoundError:
         from tflite_runtime.interpreter import Interpreter
         chirpy.logger.debug("Running on TFLite for Micro")
     except ModuleNotFoundError:
-        # fall-back to Tensorflow Lite
-        from tensorflow.lite.interpreter import Interpreter
-        chirpy.logger.debug("Running on TFLite")
-    except ModuleNotFoundError:
-        chirpy.logger.error("Can't find a usable Tensorflow library!")
-        exit(1)
+        try:
+            # fall-back to Tensorflow Lite
+            from tensorflow.lite.interpreter import Interpreter
+            chirpy.logger.debug("Running on TFLite")
+        except ModuleNotFoundError:
+            chirpy.logger.error("Can't find a usable Tensorflow library!")
+            exit(1)
 
 
 # Global model
