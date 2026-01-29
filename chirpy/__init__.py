@@ -20,15 +20,7 @@ import config
 # configure the system logger
 import logging
 logger = logging.getLogger(__name__)
-logLevel = logging.INFO
-try:
-    logLevel = int(config.logLevel)
-except(ValueError):
-    try:
-        logLevel = eval(config.logLevel)
-    except(RuntimeError):
-        logger.error(f"Can't set logging level to {config.logLevel}, using {logLevel}")
-logging.basicConfig(level=logLevel)
+logging.basicConfig(level=config.logLevel)
 
 
 from . import logger

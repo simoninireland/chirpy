@@ -25,10 +25,10 @@ def main():
     while True:
         # load a sample signal
         timestamp = datetime.now()
-        sig, sampleRate = chirpy.record(config.sampleTime)
+        sig, sampleRate = chirpy.record(config.sampleDuration)
 
         # send the sample to stdout
-        chirpy.printSample(timestamp, config.sampleTime, sig, sampleRate)
+        chirpy.printSample(timestamp, config.sampleDuration, sig, sampleRate)
 
 
 if __name__ == "__main__":
