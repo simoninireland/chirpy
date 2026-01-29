@@ -25,14 +25,9 @@ def main():
     chirpy.mqttConnect()
 
     while True:
-        buf = ''
-        while True:
-            line = stdin.readline().strip()
-            if(line == ''):
-                break
-            buf = buf + line
-
-        observation = json.loads(buf)
+        observation = chirpy.readJSON()
+        if observation is None:
+            exit(0)
         chirpy.mqttReportObservation(observation)
 
 

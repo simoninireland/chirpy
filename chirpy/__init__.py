@@ -24,6 +24,7 @@ logging.basicConfig(level=config.logLevel)
 
 
 from . import logger
+from .utils import readJSON
 from .audiofiles import load
 from .audiosample import record, makeSample, printSample
 from .classify import loadModel, loadLabels, segment, classify, mostLikelyIndex, identify, getLabelsMapping

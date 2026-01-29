@@ -40,14 +40,9 @@ def main():
 
     while True:
         # read a signal
-        buf = ''
-        while True:
-            line = stdin.readline().strip()
-            if(line == ''):
-                break
-            buf = buf + line
-
-        sample = json.loads(buf)
+        sample = chirpy.readJSON()
+        if sample is None:
+            exit(0)
         chirpy.logger.debug(f"Sample received for {sample['timestamp']}")
 
         # classify the signal
