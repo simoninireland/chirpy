@@ -30,6 +30,8 @@ SOURCES_CODE = \
 	chirpy/db.py \
 	chirpy/mqtt.py \
 	chirpy/observations.py
+
+# Tests
 SOURCES_TESTS_INIT = test/__init__.py
 SOURCES_TESTS = \
 	test/test_basic.py \
@@ -55,6 +57,7 @@ SOURCES_DOC_BUILD_HTML_DIR = $(SOURCES_DOC_BUILD_DIR)/html
 SOURCES_DOC_ZIP = $(PACKAGENAME)-doc-$(VERSION).zip
 SOURCES_DOCUMENTATION = \
 	doc/index.rst \
+	doc/install.rst \
 	doc/config.rst
 
 

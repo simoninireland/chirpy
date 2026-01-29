@@ -1,0 +1,48 @@
+#+begin_src ditaa :file pipeline.png :cmdline -r
+      +---------------------+
+      |{io}                 |
+      |    Audio capture    |
+      |                     |
+      | {timestamp, signal} |
+      +---------------------+
+		|
+		|
+		|
+		v
+	+----------------+
+	|                |
+	| Pre-processing |
+	|                |
+	+----------------+
+		|
+		|
+		|
+		v
+	 +--------------+
+	 |              |
+	 | Segmentation |
+	 |              |
+	 +--------------+
+		|
+		|
+		|
+		v
++----------------------------------+      +-------+
+|                                  |      | {d}   |
+|         Classification           | <=== | Model |
+|                                  |      |       |
+| {timestamp, species, confidence} |      +-------+
++----------------------------------+
+		|
+		|
+		|
+		v
+	 +--------------+      +---------+
+	 |{io}          |      | {s}     |
+	 |  Reporting   | ===> | Storage |
+	 |              |      |         |
+	 +--------------+      +---------+
+#+end_src
+
+#+RESULTS:
+[[file:pipeline.png]]

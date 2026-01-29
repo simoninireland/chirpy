@@ -16,4 +16,6 @@ of acoustic data and reporting the results wirelessly.
    :hidden:
 
    install
+   architecture
    config
+   acknowledgements
