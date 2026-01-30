@@ -17,5 +17,7 @@ of acoustic data and reporting the results wirelessly.
 
    install
    architecture
+   scripts
+   db-schema
    config
    acknowledgements

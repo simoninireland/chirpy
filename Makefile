@@ -58,7 +58,10 @@ SOURCES_DOC_ZIP = $(PACKAGENAME)-doc-$(VERSION).zip
 SOURCES_DOCUMENTATION = \
 	doc/index.rst \
 	doc/install.rst \
-	doc/config.rst
+	doc/config.rst \
+	doc/architecture.rst \
+	doc/scripts.rst \
+	doc/db-schema.rst
 
 
 # ----- Models -----
@@ -154,6 +157,7 @@ $(MODELS_DIR):
 # Clean up the distribution build
 clean:
 	$(RM) $(SOURCES_GENERATED) $(PACKAGENAME).egg-info dist $(SOURCES_DOC_BUILD_DIR) $(SOURCES_DOC_ZIP) dist build
+	$(CHDIR) doc && make clean
 
 # Clean up everything, including the computational environment and models
 reallyclean: clean
