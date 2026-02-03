@@ -51,7 +51,7 @@ ignored = [944,    # Coyote
            945,    # Grey wolf
            1949,   # Dog
            2818,   # Human non-vocal
-           2919,   # Human vocal
+           2819,   # Human vocal
            2820,   # Human whistle
            2143,   # Engine
            2325,   # Fireworks
