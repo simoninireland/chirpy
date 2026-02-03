@@ -17,7 +17,7 @@ of acoustic data and reporting the results wirelessly.
 
    install
    architecture
-   scripts#
+   scripts
    use-cases
    config
    db-schema
