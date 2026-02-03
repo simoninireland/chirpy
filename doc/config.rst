@@ -28,14 +28,28 @@ These values are used only when reporting observations *via* an MQTT broker.
 +-------------------+------------------+---------------------------------------+
 | Variable          | Default          | Description                           |
 +===================+==================+=======================================+
-| ``mqttClient``    | ``"chirpy"``     | Client identification (not essential) |
+| ``mqttClient``    | "chirpy"         | Client identification (not essential) |
 +-------------------+------------------+---------------------------------------+
-| ``mqttHost``      | ``None``         | MQTT broker hostname or IP address    |
+| ``mqttHost``      | None             | MQTT broker hostname or IP address    |
 +-------------------+------------------+---------------------------------------+
-| ``mqttUsername``  | ``None``         | MQTT username                         |
+| ``mqttUsername``  | None             | MQTT username                         |
 +-------------------+------------------+---------------------------------------+
-| ``mqttPassword``  | ``None``         | MQTT password                         |
+| ``mqttPassword``  | None             | MQTT password                         |
 +-------------------+------------------+---------------------------------------+
+
+MQTT topics
+-----------
+
+These are all keys into the ``mqttTopic`` dict.
+
++---------------------+--------------------+---------------------------------------+
+| Variable            | Default            | Description                           |
++=====================+====================+=======================================+
+| "observation"       | "sensor.bird"      | Bird observations                     |
++---------------------+--------------------+---------------------------------------+
+| "coreTemperature"   | "sensor.coretemp"  | Sensor core temperature               |
++---------------------+--------------------+---------------------------------------+
+
 
 SQLite database
 ---------------

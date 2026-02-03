@@ -103,7 +103,7 @@ def mqttReportObservation(observation, topic = None):
     @param topic: (optional) topic to report against (defaults to configured mqttTopic)
     """
     if topic is None:
-        topic = config.mqttTopic
+        topic = config.mqttTopic['observation']
 
     payload = json.dumps(observation)
     chirpy.logger.info(f"Reporting observation {payload}")
