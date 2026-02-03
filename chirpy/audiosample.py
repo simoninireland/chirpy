@@ -44,19 +44,28 @@ def record(duration):
     return sig, sampleRate
 
 
-def makeSample(timestamp, duration, sig, sampleRate):
+def makeSample(timestamp, duration, sig, sampleRate, stored = False):
     """Make a standard sample record from a sample.
+
+    The stored parameter indicates whether the signal has been stored.
+    The filenames for local stores are derived from timestamps, and
+    passing this parameter allows components later in the pipeline to
+    delete stored samples if reqired, for example to delete "ignored"
+    sounds.
 
     @param timestamp: the start time of the signal
     @param duration: the duration of the signal in seconds
     @param sig: the signal as an array of floats
     @paream sampleRate: the sample rate in Hz
     @param str: (optional) the stream (defaults to stdout)
+    @param stored: whether the signal has been stored locally
+
     """
     return {'timestamp': timestamp.isoformat(),
             'duration': duration,
             'sampleRate': sampleRate,
-            'signal': sig.tolist()}
+            'signal': sig.tolist(),
+            'stored': stored}
 
 
 def printSample(timestamp, duration, sig, sampleRate, str = stdout):
