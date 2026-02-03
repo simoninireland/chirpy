@@ -15,10 +15,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this software. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
-import config
+from .config import *
+import os
+import logging
+
+# update configuration variables from the environment where defined
+config.nodeIdentifier = os.getenv("CHIRPY_NODE", config.nodeIdentifier)
+config.mqttHost = os.getenv("CHIRPY_MQTT_HOST", config.mqttHost)
+config.mqttUsername = os.getenv("CHIRPY_MQTT_USERNAME", config.mqttUsername)
+config.mqttPassword = os.getenv("CHIRPY_MQTT_PASSWORD", config.mqttPassword)
+try:
+    config.logLevel =  eval(os.getenv("CHIRPY_LOG_LEVEL", "config.logLevel"))
+except Exception:
+    pass
+config.sqlitedb = os.getenv("CHIRPY_SQLITE_DB", config.sqlitedb)
 
 # configure the system logger
-import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=config.logLevel)
 

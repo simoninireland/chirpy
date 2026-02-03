@@ -16,7 +16,6 @@
 # along with this software. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
 import chirpy
-import config
 import numpy as np
 from typing import Tuple, List
 
@@ -161,15 +160,19 @@ def mostLikelyIndex(prediction):
     confidencePerSample = [ prediction[i][mostConfidentPerSample[i]] for i in range(len(mostConfidentPerSample)) ]
     mostConfidentSample = np.argmax(confidencePerSample)
     mostConfident = max(confidencePerSample)
+    index =  mostConfidentPerSample[mostConfidentSample]
 
     # reject if confidence is below threshold
-    if mostConfident < config.confidenceThreshold:
+    if mostConfident < chirpy.config.confidenceThreshold:
+        _, common = identify(index)
+        chirpy.logger.debug(f"Ignored low-confidence ({mostConfident}) observation of {common}")
         return None, None
 
-    # reject if species class is on the ognored list
-    index =  mostConfidentPerSample[mostConfidentSample]
+    # reject if species class is on the ignored list
     if labelIsIgnored(index):
         # ignore the classification
+        _, common = identify(index)
+        chirpy.logger.debug(f"Ignored observation of {common}")
         return None, None
 
     return index, mostConfident

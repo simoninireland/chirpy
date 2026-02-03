@@ -43,7 +43,8 @@ def dbCreate():
 
     # create an empty spots table
     cursor.execute("""CREATE TABLE observation(
-    timestamp TIMESTANP,
+    timestamp TIMESTAMP,
+    node VARCHAR(100),
     id INTEGER,
     confidence REAL
     )""")
@@ -90,9 +91,10 @@ def dbRecordObservation(observation):
     @param observetion: the observation"""
     cursor = connection.cursor()
 
-    cursor.execute("INSERT INTO observation VALUES(?, ?, ?)", [observation['timestamp'],
-                                                               observation['id'],
-                                                               observation['confidence']])
+    cursor.execute("INSERT INTO observation VALUES(?, ?, ?, ?)", [observation['timestamp'],
+                                                                  observation['nodeIdentifier'],
+                                                                  observation['id'],
+                                                                  observation['confidence']])
     connection.commit()
 
 

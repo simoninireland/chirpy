@@ -21,7 +21,7 @@ from sys import stdout
 import json
 
 
-def makeObservation(timestamp, mli, confidence):
+def makeObservation(timestamp, mli, confidence, node):
     """Create an observation record.
 
     The record is suitable for transmitting as a JSON object and
@@ -36,26 +36,29 @@ def makeObservation(timestamp, mli, confidence):
     @param timestamp: the timestamp for the observation we classified
     @param mli: the most likely index of the observed bird
     @param confidence: the confidence of this observation
+    @param node: identifier of node making the observation
     @returns: a dict
     """
     common, sci = chirpy.identify(mli)
 
     return {'timestamp': timestamp,
+            'nodeIdentifier': node,
             'id': int(mli),
             'confidence': float(confidence),
             'common': common,
             'sci': sci}
 
 
-def printObservation(timestamp, mli, confidence, str = stdout):
+def printObservation(timestamp, mli, confidence, node, str = stdout):
     """Output an observation as a standard JSON record to str.
 
     @param timestamp: the timestamp for the observation we classified
     @param mli: the most likely index of the observed bird
     @param confidence: the confidence of this observation
+    @param node: identifier of node making the observation
     @param str: (optional) the stream (defaults to stdout)
     """
-    observation = makeObservation(timestamp, mli, confidence)
+    observation = makeObservation(timestamp, mli, confidence, node)
     print(json.dumps(observation), file=str)
     print(file=str)
     str.flush()

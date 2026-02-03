@@ -1,4 +1,4 @@
-# Configuration template for chirpy
+# Configuration variables
 #
 # Copyright (C) 2025--2026 Simon Dobson
 #
@@ -15,15 +15,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this software. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
-# Fill in these variables to suit your installation.
+# ---------- Node identifier ----------
 
-# ---------- MQTT server ----------
+nodeIdentifier = "chirpy"
 
-mqttClient = ""
-mqttHost = ""
-mqttTopic = ""
-mqttUsername = ""
-mqttPassword = ""
+
+# ---------- MQTT broker ----------
+
+mqttHost = None
+mqttUsername = None
+mqttPassword = None
+
+
+# ---------- MQTT topics ----------
+
+mqttTopic = {'observation': 'chirpy.bird',
+             'coreTemperature': 'chirpy.coretemp',
+             }
 
 
 # ---------- SQLite database ----------

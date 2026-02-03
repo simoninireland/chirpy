@@ -62,6 +62,7 @@ def makeSample(timestamp, duration, sig, sampleRate, stored = False):
 
     """
     return {'timestamp': timestamp.isoformat(),
+            'nodeIdentifier': chirpy.config.nodeIdentifier,
             'duration': duration,
             'sampleRate': sampleRate,
             'signal': sig.tolist(),

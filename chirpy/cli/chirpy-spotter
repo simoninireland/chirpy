@@ -19,7 +19,6 @@
 import chirpy
 import numpy as np
 from sys import stdin, stdout, argv
-from datetime import datetime
 import json
 
 
@@ -46,18 +45,13 @@ def main():
         chirpy.logger.debug(f"Sample received for {sample['timestamp']}")
 
         # classify the signal
-        now = datetime.now()
         segments = chirpy.segment(np.asarray(sample['signal']), sample['sampleRate'], 3, 1)
         prediction = chirpy.classify(segments)
         mli, confidence = chirpy.mostLikelyIndex(prediction)
-        then = datetime.now()
 
         if mli is not None:
             # report
-            chirpy.printObservation(sample['timestamp'], mli, confidence)
-            chirpy.logger.debug(f"Classified sample in {then - now}s")
-        else:
-            chirpy.logger.debug("No bird identified")
+            chirpy.printObservation(sample['timestamp'], mli, confidence, sample['nodeIdentifier'])
 
 
 if __name__ == "__main__":

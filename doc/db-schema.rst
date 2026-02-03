@@ -29,6 +29,8 @@ corresponds to the index in the model's classification vector.
 +=============+==============+================================+
 | timestamp   | TIMESTAMP    | Species class                  |
 +-------------+--------------+--------------------------------+
+| node        | VARCHAR(100) | Node identifier                |
++-------------+--------------+--------------------------------+
 | id          | INTEGER      | Foreign key to ``soecies``     |
 +-------------+--------------+--------------------------------+
 | confidence  | REAL         | Confidence value               |

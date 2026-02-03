@@ -17,7 +17,6 @@
 # You should have received a copy of the GNU General Public License
 
 import chirpy
-import config
 from datetime import datetime
 
 
@@ -25,10 +24,10 @@ def main():
     while True:
         # load a sample signal
         timestamp = datetime.now()
-        sig, sampleRate = chirpy.record(config.sampleDuration)
+        sig, sampleRate = chirpy.record(chirpy.config.sampleDuration)
 
         # send the sample to stdout
-        chirpy.printSample(timestamp, config.sampleDuration, sig, sampleRate)
+        chirpy.printSample(timestamp, chirpy.config.sampleDuration, sig, sampleRate)
 
 
 if __name__ == "__main__":

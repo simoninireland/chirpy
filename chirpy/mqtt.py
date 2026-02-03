@@ -18,14 +18,13 @@
 import chirpy
 import paho.mqtt.client as mqtt
 import json
-import config
 from copy import copy
 from typing import Callable
 
 
 # Global MQTT client connection
 mqttClient: mqtt.Client = None
-mqttTopics: dict[str, Callable[[str], None]] = None
+mqttTopicCallbacks: dict[str, Callable[[str], None]] = None
 
 
 def onConnect(client, userData, flags, reason_code, properties):
@@ -33,9 +32,7 @@ def onConnect(client, userData, flags, reason_code, properties):
 
     This subscribes the client to all the topics requested.
     """
-    global mqttClient, mqttTopics
-
-    for topic in mqttTopics.keys():
+    for topic in mqttTopicCallbacks.keys():
         mqttClient.subscribe(topic)
         chirpy.logger.info(f"Subscribed to topic {topic}")
 
@@ -47,9 +44,9 @@ def onMessage(client, userData, message):
     in terms of observations rather than strings.
     """
     topic, payload = message.topic, message.payload
-    callback = mqttTopics.get(topic, None)
+    callback = mqttTopicCallbacks.get(topic, None)
     if callback is None:
-        chirpy.logger.error(f"Received a message on a topic we didn't subscribe to ({topic})")
+        chirpy.logger.error(f"Ignored a message on a topic we didn't subscribe to ({topic})")
     else:
         observation = json.loads(payload)
         callback(observation)
@@ -70,25 +67,25 @@ def mqttConnect(host = None, username = None, password = None, topics = None):
     @param password: (optional) the MQTT password
     @param topics: (optional) dict or list of pairs of topics and callbacks to subscribe to (defaults to none)
     """
-    global mqttClient, mqttTopics
+    global mqttClient, mqttTopicCallbacks
 
     if host is None:
-        host = config.mqttHost
+        host = chirpy.config.mqttHost
     if username is None:
-        username = config.mqttUsername
+        username = chirpy.config.mqttUsername
     if password is None:
-        password = config.mqttPassword
+        password = chirpy.config.mqttPassword
 
     mqttClient = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     mqttClient.username_pw_set(username, password)
     if topics is not None:
         if isinstance(topics, dict):
-            mqttTopics = copy(topics)
+            mqttTopicCallbacks = copy(topics)
         else:
-            mqttTopics = dict()
+            mqttTopicCallbacks = dict()
             for tc in topics:
                 topic, callback = tc[0], tc[1]
-                mqttTopics[topic] = callback
+                mqttTopicCallbacks[topic] = callback
         mqttClient.on_connect = onConnect
         mqttClient.on_message = onMessage
     mqttClient.connect(host)
@@ -103,10 +100,10 @@ def mqttReportObservation(observation, topic = None):
     @param topic: (optional) topic to report against (defaults to configured mqttTopic)
     """
     if topic is None:
-        topic = config.mqttTopic['observation']
+        topic = chirpy.config.mqttTopic['observation']
 
     payload = json.dumps(observation)
-    chirpy.logger.info(f"Reporting observation {payload}")
+    chirpy.logger.debug(f"Reporting observation {payload}")
     rc = mqttClient.publish(topic, payload)
     rc.wait_for_publish(1)
     if not rc.is_published():

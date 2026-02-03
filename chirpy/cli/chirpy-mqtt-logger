@@ -16,9 +16,8 @@
 #
 # You should have received a copy of the GNU General Public License
 
-import chirpy
 import json
-import config
+import chirpy
 
 # find the project root directory
 import os
@@ -26,7 +25,6 @@ cwd = os.path.dirname(os.path.realpath(__file__))
 rootDir = os.path.dirname(os.path.dirname(cwd))
 
 # find the model files relative to the project root
-modelFile = os.path.join(rootDir, "models/audio-model-int8.tflite")
 labelFile = os.path.join(rootDir, "models/labels/en_uk.txt")
 
 
@@ -34,15 +32,15 @@ def onObservation(observation):
     # we need to open the connection here, not in the main routine,
     # because SQLite databases can only be used from the thread that
     # creates them
-    chirpy.dbOpenConnection(config.sqlitedb)
+    chirpy.dbOpenConnection(chirpy.config.sqlitedb)
 
     chirpy.dbRecordObservation(observation)
-    chirpy.logger.info(f"Recorded observation {json.dumps(observation)}")
+    chirpy.logger.debug(f"Recorded observation {json.dumps(observation)}")
 
 
 def main():
     chirpy.loadLabels(labelFile)
-    chirpy.mqttConnect(topics={config.mqttTopic: onObservation})
+    chirpy.mqttConnect(topics={chirpy.config.mqttTopic['observation']: onObservation})
 
     while True:
         pass
