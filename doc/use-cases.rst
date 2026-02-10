@@ -12,7 +12,7 @@ MQTT to a remote broker.
 
 .. code:: shell
 
-   chirpy-sample | chirpy-spotter | chirpy-mqtt-reporter
+   chirpy-sample | chirpy-classify | chirpy-mqtt-reporter
 
 
 Centralised logging
