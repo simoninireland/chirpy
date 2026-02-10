@@ -17,7 +17,6 @@
 # You should have received a copy of the GNU General Public License
 
 import chirpy
-import numpy as np
 from datetime import datetime
 from dateutil.parser import parse
 from copy import copy
