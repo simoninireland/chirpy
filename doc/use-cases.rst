@@ -24,3 +24,19 @@ local database,
 .. code:: shell
 
    chirpy-mqtt-logger
+
+
+Long-term unattended capture
+----------------------------
+
+An audio sampler and classification that stops running at night.
+
+.. code:: shell
+
+   chirpy-sample --nighttime | chirpy-classify | chirpy-mqtt-reporter
+
+
+The significance of this is that pausing sampling automatically
+pauses the rest of the pipeline, which in turn reduces power
+consumption from its level during inference to its idle level, which
+can result in considerable power savings.
