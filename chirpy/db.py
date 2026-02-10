@@ -37,7 +37,7 @@ def dbCreate():
     )""")
     labels = chirpy.getLabelsMapping()
     for i in range(len(labels)):
-        common, sci = labels[i]
+        sci, common = labels[i]
         cursor.execute("INSERT INTO species VALUES(?, ?, ?)", [i, common, sci])
     chirpy.logger.info(f"Created species table ({len(labels)} classes)")
 
@@ -115,7 +115,7 @@ def dbAllObservationsOf(id):
 
 
 def dbAllObservationsBetween(start, end = None):
-    """Returns a list of all the observations between two timestamps.
+    """Return a list of all the observations between two timestamps.
 
     If the end timestamp is omitted, observations are selected up until now,
 
@@ -142,3 +142,33 @@ def dbAllObservationsBetween(start, end = None):
     # map timestamps to datetimes
     observations = cursor.fetchall()
     return map(lambda obs: [ datetime.fromtimestamp(obs[0]), obs[1], obs[2], obs[3] ], observations)
+
+
+def dbCountObservationsBetween(start, end = None):
+    """Return a dict mapping species names to count of observations between teo timestamps.
+
+    If the end timestamp is omitted, observations are selected up until now,
+
+    @param start: the start time
+    @param end: (optional) the end time (defaults to now)
+    @returns: the dict of counts"""
+    cursor = connection.cursor()
+
+    if end is None:
+        end = datetime.now()
+
+    # convert datetime objects to timestamps
+    sts = start.timestamp()
+    ets = end.timestamp()
+
+    cursor.execute("""SELECT common_name, COUNT(*) as count
+    FROM observation INNER JOIN species ON species.id = observation.id
+    WHERE timestamp BETWEEN ? AND ?
+    GROUP BY observation.id""", [sts, ets])
+
+    # convert to a dict
+    observations = cursor.fetchall()
+    counts = {}
+    for obs in observations:
+        counts[obs[0]] = obs[1]
+    return counts

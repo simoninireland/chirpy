@@ -39,20 +39,36 @@ def main():
                          help='End time (defaults to now)')
     parser.add_argument('--csv', '-c', dest='csv', action='store_true',
                          help='Output observations as CSV')
+    parser.add_argument('--number', '-n', dest='number', action='store_true',
+                         help='Output counts of species observations')
     opts = parser.parse_args(argv[1:])
-
-    chirpy.dbOpenConnection(chirpy.config.sqlitedb)
-    observations = chirpy.dbAllObservationsBetween(opts.startTime, opts.endTime)
     chirpy.logger.debug(f"Observations from {opts.startTime} to {opts.endTime}")
 
-    if opts.csv:
-        # print observations in CSV
-        for obs in observations:
-            print(f"{obs[0]},{obs[3]},{obs[2]}")
+    chirpy.dbOpenConnection(chirpy.config.sqlitedb)
+    if opts.number:
+        # summarise the counts
+        observations = chirpy.dbCountObservationsBetween(opts.startTime, opts.endTime)
+
+        if opts.csv:
+            # print observations in CSV
+            for common, count in observations.items():
+                print(f"{common},{count}")
+        else:
+            # print observations in human-readable form
+            for common, count in observations.items():
+                print(f"{common}: {count}")
     else:
-        # print observations in human-readable form
-        for obs in observations:
-            print(f"{obs[0]}: {obs[3]}")
+        # print all observations
+        observations = chirpy.dbAllObservationsBetween(opts.startTime, opts.endTime)
+
+        if opts.csv:
+            # print observations in CSV
+            for obs in observations:
+                print(f"{obs[0]},{obs[2]},{obs[3]}")
+        else:
+            # print observations in human-readable form
+            for obs in observations:
+                print(f"{obs[0]}: {obs[2]}")
 
 
 if __name__ == "__main__":
