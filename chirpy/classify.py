@@ -34,7 +34,7 @@ except ModuleNotFoundError:
             from tensorflow.lite.interpreter import Interpreter
             chirpy.logger.debug("Running on TFLite")
         except ModuleNotFoundError:
-            chirpy.logger.error("Can't find a usable Tensorflow library!")
+            chirpy.logger.critical("Can't find a usable Tensorflow library!")
             exit(1)
 
 
