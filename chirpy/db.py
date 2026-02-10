@@ -161,7 +161,7 @@ def dbCountObservationsBetween(start, end = None):
     sts = start.timestamp()
     ets = end.timestamp()
 
-    cursor.execute("""SELECT common_name, COUNT(*) as count
+    cursor.execute("""SELECT common_name, COUNT(*) AS count
     FROM observation INNER JOIN species ON species.id = observation.id
     WHERE timestamp BETWEEN ? AND ?
     GROUP BY observation.id""", [sts, ets])
