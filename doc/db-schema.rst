@@ -27,11 +27,13 @@ corresponds to the index in the model's classification vector.
 +-------------+--------------+--------------------------------+
 | Column name | Type         | Description                    |
 +=============+==============+================================+
-| timestamp   | TIMESTAMP    | Species class                  |
+| timestamp   | INTEGER      | Timestamp of observation       |
 +-------------+--------------+--------------------------------+
 | node        | VARCHAR(100) | Node identifier                |
 +-------------+--------------+--------------------------------+
-| id          | INTEGER      | Foreign key to ``soecies``     |
+| id          | INTEGER      | Foreign key to ``species``     |
 +-------------+--------------+--------------------------------+
 | confidence  | REAL         | Confidence value               |
 +-------------+--------------+--------------------------------+
+
+Timestamps are stored as Unix seconds-since-the-epoch values.
