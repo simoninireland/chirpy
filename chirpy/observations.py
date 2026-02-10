@@ -27,10 +27,11 @@ def makeObservation(timestamp, mli, confidence, node):
     The record is suitable for transmitting as a JSON object and
     contains the following fields:
 
+    type: the object type ("observation")
     timestamp: an ISO8601-format timestamp
     id: the BirdNET index for the bird observed
     confidence: the confidence score for the observation
-    common: the cmmon name of the bird
+    common: the common name of the bird
     sci: the scientific name of the bird
 
     @param timestamp: the timestamp for the observation we classified
@@ -41,7 +42,8 @@ def makeObservation(timestamp, mli, confidence, node):
     """
     common, sci = chirpy.identify(mli)
 
-    return {'timestamp': timestamp,
+    return {'type': 'observation',
+            'timestamp': timestamp,
             'nodeIdentifier': node,
             'id': int(mli),
             'confidence': float(confidence),

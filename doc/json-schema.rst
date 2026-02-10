@@ -1,12 +1,14 @@
 JSON object schemata
 ====================
 
-Signal objects
---------------
+Signal sample objects
+---------------------
 
 +----------------+--------------+--------------------------------+
 | Column name    | Type         | Description                    |
 +================+==============+================================+
+| type           | string       | "sample"                       |
++----------------+--------------+--------------------------------+
 | timestamp      | datetime     | Start of sample period         |
 +----------------+--------------+--------------------------------+
 | nodeIdentifier | string       | Node identifier                |
@@ -29,6 +31,8 @@ Observation objects
 +----------------+--------------+--------------------------------+
 | Column name    | Type         | Description                    |
 +================+==============+================================+
+| type           | string       | "observation"                  |
++----------------+--------------+--------------------------------+
 | timestamp      | datetime     | Start of observation period    |
 +----------------+--------------+--------------------------------+
 | nodeIdentifier | string       | Node identifier                |
