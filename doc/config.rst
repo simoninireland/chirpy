@@ -44,6 +44,9 @@ These tuning values all have sensible defaults.
 | ``confidenceThreshold`` | 0.2                | Minimal confidence for an             |                      |
 |                         |                    | observation to be reported            |                      |
 +-------------------------+--------------------+---------------------------------------+----------------------+
+| ``nighttimeOffset``     | 60                 | Time in minutes from sunrise/sunset   |                      |
+|                         |                    | considered to be night-time           |                      |
++-------------------------+--------------------+---------------------------------------+----------------------+
 
 The ``CHIRPY_LOG_LEVEL`` value can be a number or an expression. It is
 evaluated in an environment where the ``logging`` module is imported,

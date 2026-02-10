@@ -7,9 +7,22 @@ Shell scripts
 This script samples audio from the default sound input device --
 typically there will be only one on a sensor -- and outputs it as a
 JSON sample object holding the timestamped sample. Sampling continues
-indefinitely.
+indefinitely by default, but this can be changed using the following
+options.
 
-The duration of a sample is set by the ``sampleDuration``
++-------------------+-------------------------------+----------------+
+| Option            | Description                   | Default        |
++===================+===============================+================+
+| ``--nighttime``   | Pause sampling at night       | False          |
+| ``-n``            |                               |                |
++-------------------+-------------------------------+----------------+
+| ``--samples`` <n> | Take n samples before exiting | Unbounded      |
+| ``-N`` <n>        |                               |                |
++-------------------+-------------------------------+----------------+
+
+The duration of each sample is set by the ``sampleDuration``
+configuration variable. Night-time is defined by the local sunset and
+sunrise times, offset by the value of the ``nighttimeOffset``
 configuration variable.
 
 ``chirpy-classify``

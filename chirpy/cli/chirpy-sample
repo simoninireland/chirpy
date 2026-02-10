@@ -17,9 +17,11 @@
 # You should have received a copy of the GNU General Public License
 
 import chirpy
-import os
-from datetime import datetime
+from sys import argv
+from datetime import datetime, timedelta
 import dateutil
+from time import sleep
+from argparse import ArgumentParser
 from suntime import Sun
 
 
@@ -27,27 +29,86 @@ sun = Sun(chirpy.config.nodeLatitude, chirpy.config.nodeLongitude)
 tz = dateutil.tz.gettz()
 
 
-def withinSampleInterval(timestamp):
-    """Test whether the current time is within the sampling time.
+def parseargs(args):
+    parser = ArgumentParser(prog='chirpy-sample',
+                            description='Capture regular audio samples')
+    parser.add_argument('--nighttime', '-n', dest='nighttime', action='store_true',
+                        help='Stop recording at night-time')
+    parser.add_argument('--samples', '-N', dest='samples', action='store',
+                        type=int, default=None,
+                        help='Take a given number of samples')
+    return parser.parse_args(args)
 
-    @param timestamp: the time to check
-    @returns: True if a sample should be taken"""
-    return True
+
+def sample(timestamp):
+    """Take a sample and output it.
+
+    :param timestamp: the time of the sample"""
+    # load a sample signal
+    sig, sampleRate = chirpy.record(chirpy.config.sampleDuration)
+
+    # send the sample to stdout
+    #chirpy.printSample(timestamp, chirpy.config.sampleDuration, sig, sampleRate)
+    print(f"sample {timestamp}")
+
+
+def sleepUntil(timestamp):
+    """Sleep until the given time.
+
+    :param timestamp: the time to sleep until"""
+    now = datetime.now()
+    delay = timestamp - now
+    chirpy.logger.info(f"Sleeping until {timestamp} (time is now {now})")
+    sleep(delay.seconds)
 
 
 def main():
-    while True:
-        timestamp = datetime.now()
+    opts = parseargs(argv[1:])
 
-        if withinSampleInterval(timestamp):
-            # load a sample signal
-            sig, sampleRate = chirpy.record(chirpy.config.sampleDuration)
+    if opts.samples is not None:
+        chirpy.logger.info(f"Taking {opts.samples} samples")
 
-            # send the sample to stdout
-            chirpy.printSample(timestamp, chirpy.config.sampleDuration, sig, sampleRate)
+    # compute the next sunset or sunrise
+    today = datetime.today()
+    now = datetime.now()
+    offset = timedelta(minutes=chirpy.config.nighttimeOffset)
+    sunrise = sun.get_sunrise_time(today, tz) - offset
+    sunset = sun.get_sunset_time(today, tz) + offset
+    if opts.nighttime:
+        if now.timestamp() < sunrise.timestamp():
+            # started before sunrise, wait
+            sleepUntil(sunrise)
+
+        # log our wakefulness
+        chirpy.logger.info(f"Sampling until {sunset} (time is now {now})")
+
+    samplesTaken = 0
+    while (opts.samples is None) or (samplesTaken < opts.samples):
+        now = datetime.now()
+
+        if opts.nighttime:
+            # check for night-time
+            if now.timestamp() > sunset.timestamp():
+                # after sunset, compute tomorrow's sunrise and sunset
+                tomorrow = today + timedelta(days=1)
+                sunrise = sun.get_sunrise_time(tomorrow, tz) - offset
+                sunset = sun.get_sunset_time(tomorrow, tz) + offset
+
+                # pause until sunrise
+                sleepUntil(sunrise)
+                now = datetime.now()
+                chirpy.logger.info(f"Sampling until {sunset} (time is now {now})")
+
+            # take a sample
+            sample(now)
         else:
-            # wait
-            pass
+            # collect a sample regardless
+            sample(now)
+
+        samplesTaken += 1
+
+    if opts.samples is not None:
+        chirpy.logger.info(f"Took {samplesTaken} samples")
 
 
 if __name__ == "__main__":

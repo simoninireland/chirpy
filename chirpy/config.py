@@ -48,3 +48,4 @@ import logging
 logLevel = logging.INFO
 sampleDuration = 5
 confidenceThreshold = 0.2
+nighttimeOffset = 60
