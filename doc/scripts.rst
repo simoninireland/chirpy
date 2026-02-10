@@ -56,22 +56,25 @@ The defaults are to print a human-readable list of timestamp and
 common species name for all observations between start-of-day and now.
 This can be change using the following command-line options.
 
-+==========+===============================+================+
-| Option   | Description                   | Default        |
-+----------+-------------------------------+----------------+
-| --from   | Start time for observations   | Start of today |
-| -f       |                               |                |
-+----------+-------------------------------+----------------+
-| --to     | End time for observations     | Now            |
-| -t       |                               |                |
-+----------+-------------------------------+----------------+
-| --csv    | Output observations as CSV    | False          |
-| -c       |                               |                |
-+----------+-------------------------------+----------------+
-| --number | Output counts of species      | False          |
-| -n       |                               |                |
-+----------+-------------------------------+----------------+
++-------------------+-------------------------------+----------------+
+| Option            | Description                   | Default        |
++===================+===============================+================+
+| ``--from`` <time> | Start time for observations   | Start of today |
+| ``-f`` <time>     |                               |                |
++-------------------+-------------------------------+----------------+
+| ``--to`` <time>   | End time for observations     | Now            |
+| ``-t`` <time>     |                               |                |
++-------------------+-------------------------------+----------------+
+| ``--csv``         | Output observations as CSV    | False          |
+| ``-c``            |                               |                |
++-------------------+-------------------------------+----------------+
+| ``--number``      | Output counts of species      | False          |
+| ``-n``            |                               |                |
++-------------------+-------------------------------+----------------+
 
 The start and end times accept strings in any format accepted by the
-[``dateutil``](https://dateutil.readthedocs.io/en/stable/) module,
-which includes (for example) strings like "10:33" for a time today.
+`dateutil`_ package, for example "10:33" to a time today or "9 feb"
+for a specific date.
+
+
+.. _dateutil: https://dateutil.readthedocs.io/en/stable/
