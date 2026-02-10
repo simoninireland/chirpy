@@ -4,7 +4,8 @@ Configuration values
 ``chirpy`` can be configured in several ways:
 
 - Most values have sensible defaults where possible
-- Scripts take command-line options that set configuration values
+- Scripts take command-line options that can set some configuration
+  values
 - The values can be set programmatically by accessing variables in
   ``chirpy.config``
 - Some values can also be set from a program's environment by setting
@@ -25,9 +26,12 @@ Node identification
 +--------------------+------------------+----------------------------------------+--------------------------+
 
 The node identifier will be passed in all JSON objects within
-``chirpy``, allowing the source of observations to be determined. The
-latitude and longitude are used when computing sunrise and sunset
-times, and default to [St Andrews](https://en.wikipedia.org/wiki/St_Andrews).
+``chirpy``, allowing the source of observations to be determined.
+
+The latitude and longitude are used when computing sunrise and sunset
+times (for avoiding sampling at night), and defaults to `St Andrews`_.
+There's no need to be too precise about these values: within a degree
+will be enough to enable the functionality.
 
 System tuning
 -------------
@@ -81,7 +85,6 @@ These are all keys into the ``mqttTopic`` dict.
 | "coreTemperature"   | "sensor.coretemp"  | Sensor core temperature               |
 +---------------------+--------------------+---------------------------------------+
 
-
 SQLite database
 ---------------
 
@@ -92,3 +95,6 @@ These variables set up the SQLite database used for storing observations.
 +===================+==================+=======================================+======================+
 | ``sqlitedb``      | ``chirpy.db``    | File name for SQLite database         | ``CHIRPY_SQLITE_DB`` |
 +-------------------+------------------+---------------------------------------+----------------------+
+
+
+.. _St Andrews: https://en.wikipedia.org/wiki/St_Andrews
