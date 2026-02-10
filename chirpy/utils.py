@@ -16,6 +16,7 @@
 # along with this software. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
 from sys import stdin
+import os.path
 import json
 
 
@@ -45,3 +46,23 @@ def readJSON(str = stdin):
         return json.loads(buf)
     except(json.decoder.JSONDecodeError):
         return None
+
+
+def filenameForTimestamp(timestamp, dir = None):
+    """Generate a filename for saving a sample captured at the given time.
+
+    The filename is local unless dir is given, in which case it exists in
+    that directory,
+
+    @param timestamp: the sample timestamp
+    @param dir: (optional) directory for filename"""
+
+    # construct the basename
+    ts = timestamp.timetuple()
+    basename = f"{ts[0]:04d}-{ts[1]:02}-{ts[2]:02d}T{ts[3]:02d}-{ts[4]:02d}-{ts[5]:02d}.wav"
+
+    # attach to directory if provided
+    if dir is None:
+        return basename
+    else:
+        return os.path.join(dir, basename)

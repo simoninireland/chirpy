@@ -19,9 +19,15 @@ Node identification
 | ``nodeIdentifier`` | "chirpy"         | Node identification string, needed for | ``CHIRPY_NODE``          |
 |                    |                  | systems with several sensors           |                          |
 +--------------------+------------------+----------------------------------------+--------------------------+
+| ``nodeLatitude``   | 56.33404         | Node latitude                          | ``CHIRPY_NODE_LAT``      |
++--------------------+------------------+----------------------------------------+--------------------------+
+| ``nodeLongitude``  | -2.79955         | Node longitude                         | ``CHIRPY_NODE_LON``      |
++--------------------+------------------+----------------------------------------+--------------------------+
 
 The node identifier will be passed in all JSON objects within
-``chirpy``, allowing the source of observations to be determined.
+``chirpy``, allowing the source of observations to be determined. The
+latitude and longitude are used when computing sunrise and sunset
+times, and default to [St Andrews](https://en.wikipedia.org/wiki/St_Andrews).
 
 System tuning
 -------------

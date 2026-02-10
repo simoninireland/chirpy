@@ -18,6 +18,8 @@
 # ---------- Node identifier ----------
 
 nodeIdentifier = "chirpy"
+nodeLatitude = 56.33404
+nodeLongitude = -2.79955
 
 
 # ---------- MQTT broker ----------

@@ -1,6 +1,8 @@
 ai_edge_litert
 soundfile
 pyaudio
+python-dateutil
+suntime
 paho-mqtt
 typing_extensions; python_version <= '3.7'
 types-paho-mqtt

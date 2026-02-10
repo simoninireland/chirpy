@@ -14,8 +14,10 @@
 #
 # You should have received a copy of the GNU General Public License
 
+import chirpy
 import sounddevice as sd
 import numpy as np
+from copy import copy
 from sys import stdout
 import json
 
@@ -61,7 +63,10 @@ def makeSample(timestamp, duration, sig, sampleRate, stored = False):
     @param stored: whether the signal has been stored locally
 
     """
-    return {'timestamp': timestamp.isoformat(),
+    # mask-out sub-seconds in the timestamp
+    ts = copy(timestamp).replace(microsecond=0)
+
+    return {'timestamp': ts.isoformat(),
             'nodeIdentifier': chirpy.config.nodeIdentifier,
             'duration': duration,
             'sampleRate': sampleRate,

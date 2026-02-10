@@ -43,7 +43,7 @@ def dbCreate():
 
     # create an empty spots table
     cursor.execute("""CREATE TABLE observation(
-    timestamp TIMESTAMP,
+    timestamp INTEGER,
     node VARCHAR(100),
     id INTEGER,
     confidence REAL
@@ -91,7 +91,10 @@ def dbRecordObservation(observation):
     @param observetion: the observation"""
     cursor = connection.cursor()
 
-    cursor.execute("INSERT INTO observation VALUES(?, ?, ?, ?)", [observation['timestamp'],
+    # convert datetime object to timestamp
+    ts = round(datetime.fromisoformat(observation['timestamp']).timestamp())
+
+    cursor.execute("INSERT INTO observation VALUES(?, ?, ?, ?)", [ts,
                                                                   observation['nodeIdentifier'],
                                                                   observation['id'],
                                                                   observation['confidence']])
@@ -127,8 +130,15 @@ def dbAllObservationsBetween(start, end = None):
     if end is None:
         end = datetime.now()
 
+    # convert datetime objects to timestamps
+    sts = start.timestamp()
+    ets = end.timestamp()
+
     cursor.execute("""SELECT timestamp, confidence, common_name, scientific_name
     FROM observation INNER JOIN species ON species.id = observation.id
     WHERE timestamp BETWEEN ? AND ?
-    ORDER BY timestamp""", [start, end])
-    return cursor.fetchall()
+    ORDER BY timestamp""", [sts, ets])
+
+    # map timestamps to datetimes
+    observations = cursor.fetchall()
+    return map(lambda obs: [ datetime.fromtimestamp(obs[0]), obs[1], obs[2], obs[3] ], observations)

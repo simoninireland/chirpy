@@ -1,0 +1,59 @@
+#!/usr/bin/env python
+
+# Observation list from database script
+#
+# Copyright (C) 2025--2026 Simon Dobson
+#
+# This is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This software is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+
+import chirpy
+import numpy as np
+from datetime import datetime
+from dateutil.parser import parse
+from copy import copy
+from argparse import ArgumentParser
+from sys import argv
+
+
+def main():
+    now = datetime.now()
+    startOfDay = copy(now).replace(hour=0, minute=0, second=0, microsecond=0)
+
+    parser = ArgumentParser(prog='chirpy-list',
+                            description='List chirpy database for observations')
+    parser.add_argument('--from', '-f', dest='startTime', action='store',
+                         type=parse, default=startOfDay,
+                         help='Start time (defaults to start of today)')
+    parser.add_argument('--to', '-t', dest='endTime', action='store',
+                         type=parse, default=now,
+                         help='End time (defaults to now)')
+    parser.add_argument('--csv', '-c', dest='csv', action='store_true',
+                         help='Output observations as CSV')
+    opts = parser.parse_args(argv[1:])
+
+    chirpy.dbOpenConnection(chirpy.config.sqlitedb)
+    observations = chirpy.dbAllObservationsBetween(opts.startTime, opts.endTime)
+    chirpy.logger.debug(f"Observations from {opts.startTime} to {opts.endTime}")
+
+    if opts.csv:
+        # print observations in CSV
+        for obs in observations:
+            print(f"{obs[0]},{obs[3]},{obs[2]}")
+    else:
+        # print observations in human-readable form
+        for obs in observations:
+            print(f"{obs[0]}: {obs[3]}")
+
+
+if __name__ == "__main__":
+    main()
