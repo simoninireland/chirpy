@@ -46,17 +46,17 @@ def sample(timestamp):
     :param timestamp: the time of the sample"""
     # load a sample signal
     sig, sampleRate = chirpy.record(chirpy.config.sampleDuration)
+    chirpy.logger.debug(f"Sample taken at {timestamp} ({chirpy.config.sampleDuration}s)")
 
     # send the sample to stdout
-    #chirpy.printSample(timestamp, chirpy.config.sampleDuration, sig, sampleRate)
-    print(f"sample {timestamp}")
+    chirpy.printSample(timestamp, chirpy.config.sampleDuration, sig, sampleRate)
 
 
 def sleepUntil(timestamp):
     """Sleep until the given time.
 
     :param timestamp: the time to sleep until"""
-    now = datetime.now()
+    now = datetime.now(tz)
     delay = timestamp - now
     chirpy.logger.info(f"Sleeping until {timestamp} (time is now {now})")
     sleep(delay.seconds)
@@ -69,11 +69,10 @@ def main():
         chirpy.logger.info(f"Taking {opts.samples} samples")
 
     # compute the next sunset or sunrise
-    today = datetime.today()
-    now = datetime.now()
+    now = datetime.now(tz)
     offset = timedelta(minutes=chirpy.config.nighttimeOffset)
-    sunrise = sun.get_sunrise_time(today, tz) - offset
-    sunset = sun.get_sunset_time(today, tz) + offset
+    sunrise = sun.get_sunrise_time(now, tz) - offset
+    sunset = sun.get_sunset_time(now, tz) + offset
     if opts.nighttime:
         if now.timestamp() < sunrise.timestamp():
             # started before sunrise, wait
@@ -90,13 +89,13 @@ def main():
             # check for night-time
             if now.timestamp() > sunset.timestamp():
                 # after sunset, compute tomorrow's sunrise and sunset
-                tomorrow = today + timedelta(days=1)
+                tomorrow = now + timedelta(days=1)
                 sunrise = sun.get_sunrise_time(tomorrow, tz) - offset
                 sunset = sun.get_sunset_time(tomorrow, tz) + offset
 
                 # pause until sunrise
                 sleepUntil(sunrise)
-                now = datetime.now()
+                now = datetime.now(tz)
                 chirpy.logger.info(f"Sampling until {sunset} (time is now {now})")
 
             # take a sample
