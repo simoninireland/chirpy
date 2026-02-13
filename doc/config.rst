@@ -54,8 +54,8 @@ These tuning values all have sensible defaults.
 
 The ``CHIRPY_LOG_LEVEL`` value can be a number or an expression. It is
 evaluated in an environment where the ``logging`` module is imported,
-so a value such as "logging.CRITICAL" will set the logging level as
-expected.
+so a value such as "logging.CRITICAL" will set the logging level to
+``logging.CRITICAL``.
 
 MQTT broker
 -----------
@@ -71,19 +71,6 @@ These values are used only when reporting observations *via* an MQTT broker.
 +-------------------+------------------+---------------------------------------+--------------------------+
 | ``mqttPassword``  | None             | MQTT password                         | ``CHIRPY_MQTT_PASSWORD`` |
 +-------------------+------------------+---------------------------------------+--------------------------+
-
-MQTT topics
------------
-
-These are all keys into the ``mqttTopic`` dict.
-
-+---------------------+--------------------+---------------------------------------+
-| Variable            | Default            | Description                           |
-+=====================+====================+=======================================+
-| "observation"       | "sensor.bird"      | Bird observations                     |
-+---------------------+--------------------+---------------------------------------+
-| "coreTemperature"   | "sensor.coretemp"  | Sensor core temperature               |
-+---------------------+--------------------+---------------------------------------+
 
 SQLite database
 ---------------

@@ -34,7 +34,7 @@ def onConnect(client, userData, flags, reason_code, properties):
     """
     for topic in mqttTopicCallbacks.keys():
         mqttClient.subscribe(topic)
-        chirpy.logger.info(f"Subscribed to topic {topic}")
+        chirpy.logger.debug(f"Subscribed to topic {topic}")
 
 
 def onMessage(client, userData, message):
@@ -46,7 +46,7 @@ def onMessage(client, userData, message):
     topic, payload = message.topic, message.payload
     callback = mqttTopicCallbacks.get(topic, None)
     if callback is None:
-        chirpy.logger.error(f"Ignored a message on a topic we didn't subscribe to ({topic})")
+        chirpy.logger.warning(f"Ignored a message on a topic we didn't subscribe to ({topic})")
     else:
         observation = json.loads(payload)
         callback(observation)
@@ -93,18 +93,16 @@ def mqttConnect(host = None, username = None, password = None, topics = None):
     mqttClient.loop_start()
 
 
-def mqttReportObservation(observation, topic = None):
-    """Report an observation on MQTT against the given topic.
+def mqttSendMessage(msg, topic):
+    """Report an a message on MQTT against the given topic.
 
-    @param observation: the observation
-    @param topic: (optional) topic to report against (defaults to configured mqttTopic)
+    The message should be JSON encoded.
+
+    @param message: the message
+    @param topic: topic to report against
     """
-    if topic is None:
-        topic = chirpy.config.mqttTopic['observation']
-
-    payload = json.dumps(observation)
-    chirpy.logger.debug(f"Reporting observation {payload}")
+    payload = json.dumps(msg)
     rc = mqttClient.publish(topic, payload)
     rc.wait_for_publish(1)
     if not rc.is_published():
-        chirpy.logger.error(f"Observation possibly not published successfully (error code {rc.rc})")
+        chirpy.logger.error(f"Message to {topic} possibly not published successfully (error code {rc.rc})")

@@ -50,5 +50,5 @@ from .audiofiles import load
 from .audiosample import record, makeSample, printSample
 from .classify import loadModel, loadLabels, segment, classify, mostLikelyIndex, identify, getLabelsMapping
 from .observations import makeObservation, printObservation
-from .mqtt import mqttConnect, mqttReportObservation
+from .mqtt import mqttConnect, mqttSendMessage
 from .db import dbOpenConnection, dbRecordObservation, dbAllObservationsOf, dbAllObservationsBetween, dbCountObservationsBetween

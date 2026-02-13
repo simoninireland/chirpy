@@ -30,6 +30,12 @@ SOURCES_CODE = \
 	chirpy/db.py \
 	chirpy/mqtt.py \
 	chirpy/observations.py
+SOURCES_SCRIPTS= \
+	chirpy/cli/chirpy-sample \
+	chirpy/cli/chirpy-classify \
+	chirpy/cli/chirpy-logger \
+	chirpy/cli/chirpy-mqtt \
+	chirpy/cli/chirpy-list
 
 # Tests
 SOURCES_TESTS_INIT = test/__init__.py
@@ -43,8 +49,7 @@ TESTSUITE = test
 
 # Extras for the build and packaging system
 SOURCES_EXTRA = \
-	README.org \
-	chirpy.py.in
+	README.org
 SOURCES_GENERATED = \
 	MANIFEST \
 	TAGS \
@@ -61,7 +66,10 @@ SOURCES_DOCUMENTATION = \
 	doc/config.rst \
 	doc/architecture.rst \
 	doc/scripts.rst \
-	doc/db-schema.rst
+	doc/db-schema.rst \
+	doc/json-schema.rst
+SOURCES_DOC_EXTRA = \
+	doc/pipeline.png
 
 
 # ----- Models -----

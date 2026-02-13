@@ -38,27 +38,43 @@ Some classes of sound are recognised and ignored, notably human
 speech. Classifications with confidence falling below the value of the
 ``confidenceThreshold`` configuration value are ignored.
 
-``chirpy-mqtt-reporter``
-------------------------
+``chirpy-mqtt``
+---------------
 
-This script accepts a JSON-encoded observation and transmits is by
-MQTT to a broker. Reporting continues as long a there are observations
-being sent.
+This script bridges ``chirpy``'s shall pipelines to and from an MQTT
+message broker. The script works in three different ways:
+
+- sending messages to a topic;
+- accepting messages from a topic; and
+- passing messages between topics.
 
 The MQTT connection is set by the ``mqttHost``, ``mqttUsername``, and
-``mqttPassword`` configuration values. The ``mqttTopic`` value
-specifies what topic observations are sent to.
+``mqttPassword`` configuration values. Thetopics are set using
+command-line options.
 
-``chirpy-mqtt-logger``
-----------------------
++--------------------+-------------------------------+----------------+
+| Option             | Description                   | Default        |
++====================+===============================+================+
+| ``--from`` <topic> | Topic to take messages from   | ``sys.stdin``  |
+| ``-f`` <topic>     |                               |                |
++--------------------+-------------------------------+----------------+
+| ``--to`` <topic>   | Topic to send messages to     | ``sys.stdout`` |
+| ``-t`` <topic>     |                               |                |
++--------------------+-------------------------------+----------------+
 
-This script reads observations from the MQTT broker and stores them in
-an SQLite database. (See :doc:`db-schema` for the SQL schema
-used.)Storage happens as long as new observations are reported.
+By default the script takes messages from standard input and sends
+them to standard output, either of which can be re-directed to a
+topic. The messages sent must be JSON-encoded.
 
-In addition to the MQTT configuration values, the ``sqlitedb`` value
-specifies the filename for the SQLite database. This will be created
-if it doesn't exist.
+``chirpy-logger``
+-----------------
+
+This script reads observations stores them in an SQLite database. (See
+:doc:`db-schema` for the SQL schema used.) Storage happens as long as
+new observations are reported.
+
+The ``sqlitedb`` configuration value specifies the filename for the
+SQLite database. This will be created if it doesn't exist.
 
 ``chirpy-list``
 ---------------

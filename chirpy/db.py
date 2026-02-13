@@ -91,14 +91,20 @@ def dbRecordObservation(observation):
     @param observetion: the observation"""
     cursor = connection.cursor()
 
-    # convert datetime object to timestamp
-    ts = round(datetime.fromisoformat(observation['timestamp']).timestamp())
+    try:
+        # convert datetime object to timestamp
+        ts = round(datetime.fromisoformat(observation['timestamp']).timestamp())
 
-    cursor.execute("INSERT INTO observation VALUES(?, ?, ?, ?)", [ts,
-                                                                  observation['nodeIdentifier'],
-                                                                  observation['id'],
-                                                                  observation['confidence']])
-    connection.commit()
+        cursor.execute("INSERT INTO observation VALUES(?, ?, ?, ?)", [ts,
+                                                                      observation['nodeIdentifier'],
+                                                                      observation['id'],
+                                                                      observation['confidence']])
+        connection.commit()
+        chirpy.logger.debug(f"Recorded observation {json.dumps(observation)}")
+    except ValueError:
+        chirpy.logger.error(f"Can't parse timestamp {observation['timestamp']}")
+    except Exception as e:
+        chirpy.logger.error(f"Error storing observation: {e}")
 
 
 def dbAllObservationsOf(id):

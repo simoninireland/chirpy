@@ -29,13 +29,6 @@ mqttUsername = None
 mqttPassword = None
 
 
-# ---------- MQTT topics ----------
-
-mqttTopic = {'observation': 'chirpy.bird',
-             'coreTemperature': 'chirpy.coretemp',
-             }
-
-
 # ---------- SQLite database ----------
 
 sqlitedb = "chirpy.db"

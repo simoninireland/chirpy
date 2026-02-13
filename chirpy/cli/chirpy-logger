@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# MQTT logging script
+# Logging script
 #
 # Copyright (C) 2025--2026 Simon Dobson
 #
@@ -16,8 +16,9 @@
 #
 # You should have received a copy of the GNU General Public License
 
-import json
 import chirpy
+from sys import exit
+import json
 
 # find the project root directory
 import os
@@ -28,22 +29,15 @@ rootDir = os.path.dirname(os.path.dirname(cwd))
 labelFile = os.path.join(rootDir, "models/labels/en_uk.txt")
 
 
-def onObservation(observation):
-    # we need to open the connection here, not in the main routine,
-    # because SQLite databases can only be used from the thread that
-    # creates them
-    chirpy.dbOpenConnection(chirpy.config.sqlitedb)
-
-    chirpy.dbRecordObservation(observation)
-    chirpy.logger.debug(f"Recorded observation {json.dumps(observation)}")
-
-
 def main():
     chirpy.loadLabels(labelFile)
-    chirpy.mqttConnect(topics={chirpy.config.mqttTopic['observation']: onObservation})
+    chirpy.dbOpenConnection(chirpy.config.sqlitedb)
 
     while True:
-        pass
+        observation = chirpy.readJSON()
+        if observation is None:
+            exit(0)
+        chirpy.dbRecordObservation(observation)
 
 
 if __name__ == "__main__":
