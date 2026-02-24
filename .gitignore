@@ -47,3 +47,6 @@ models/
 data/
 *.sqlite3?
 *.db
+
+# FreeCAD backups
+*.FCBak
