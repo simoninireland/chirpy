@@ -1,5 +1,6 @@
 pyright
 pytest
+setuptools
 coverage
 pylint
 rope
