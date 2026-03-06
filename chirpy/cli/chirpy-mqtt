@@ -69,7 +69,7 @@ def main():
                 exit(0)
             onMessage(msg)
     else:
-        # register to receive essages
+        # register to receive messages
         topics = {opts.fromTopic: onMessage}
         chirpy.mqttConnect(topics=topics)
         while True:
