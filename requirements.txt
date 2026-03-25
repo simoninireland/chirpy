@@ -6,5 +6,6 @@ suntime
 paho-mqtt
 typing_extensions; python_version <= '3.7'
 types-paho-mqtt
-rpi.lgpio
-spidev
+#rpi.lgpio
+#spidev
+meshtastic
