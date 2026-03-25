@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this software. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
+# ---------- Configuration ----------
+
 from .config import *
 import os
 import logging
@@ -44,6 +46,8 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=config.logLevel)
 
 
+# ---------- API ----------
+
 from . import logger
 from .utils import readJSON, filenameForTimestamp
 from .audiofiles import load
@@ -51,4 +55,5 @@ from .audiosample import record, makeSample, printSample
 from .classify import loadModel, loadLabels, segment, classify, mostLikelyIndex, identify, getLabelsMapping
 from .observations import makeObservation, printObservation
 from .mqtt import mqttConnect, mqttSendMessage
+from .meshtastic import meshtasticConnect, meshtasticSendMessage
 from .db import dbOpenConnection, dbRecordObservation, dbAllObservationsOf, dbAllObservationsBetween, dbCountObservationsBetween
