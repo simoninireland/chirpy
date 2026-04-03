@@ -80,10 +80,10 @@ MODELS_DIR = models
 # BirdNET models (from Zenodo)
 BIRDNET_MODEL_BASE_URL = https://zenodo.org/records/15050749/files
 BIRDNET_MODEL_STEM = BirdNET_v2.4_
-BIRDNET_MODEL_FORMATS = tflite tfline_fp16 tflite_int8
+BIRDNET_MODEL_FORMATS = tflite_int8 # tflite tfline_fp16
 
 # Google Perch model (from Kaggle)
-PERCH_MODEL = google/bird-vocalization-classifier/tensorFlow2/perch_v2_cpu
+PERCH_MODEL = # google/bird-vocalization-classifier/tensorFlow2/perch_v2_cpu
 
 
 # ----- Tools -----
@@ -105,6 +105,7 @@ CHDIR = cd
 MKDIR = mkdir -p
 CURL = curl
 ZIP = zip -r
+UNZIP = unzip
 
 # Makefile environment
 SHELL := bash
@@ -159,8 +160,8 @@ $(VENV):
 # Kaggle API keys installed in ~/.kaggle/kaggle.json
 $(MODELS_DIR):
 	$(MKDIR) $(MODELS_DIR)
-	for fn in $(BIRDNET_MODEL_FILES); do $(CURL) -o $(MODELS_DIR)/$$fn $(BIRDNET_MODEL_BASE_URL)/$$fn?download=1; done
-	$(ACTIVATE) && $(PYTHON) -c "import kagglehub; path = kagglehub.model_download('$(PERCH_MODEL)'); print(path)"
+	$(CHDIR) $(MODELS_DIR) && for fn in $(BIRDNET_MODEL_FILES); do $(CURL) -o $$fn $(BIRDNET_MODEL_BASE_URL)/$$fn?download=1; $(UNZIP) $$fn ; done
+	if [ $(PERCH_MODEL) ]; then $(ACTIVATE) && $(PYTHON) -c "import kagglehub; path = kagglehub.model_download('$(PERCH_MODEL)'); print(path)"
 
 # Clean up the distribution build
 clean:
