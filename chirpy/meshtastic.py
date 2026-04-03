@@ -16,33 +16,33 @@
 # along with this software. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
 import chirpy
+import json
 import meshtastic
 import meshtastic.tcp_interface
-from pubsub import pub
 
 
 # Global Meshtastic device
 meshtasticInterface: meshtastic.mesh_interface = None
 
 
-def onConnect(interface, topic = pub.AUTO_TOPIC):
-    """Meshtastic device connection."""
-    chirpy.logger.debug("Connected to Meshtastic device")
-
-
 def meshtasticConnect(host = "localhost"):
     """Connect to a local Meshtastic device."""
+    global meshtasticInterface
+
     meshtasticInterface = meshtastic.tcp_interface.TCPInterface(host)
     chirpy.logger.info(f"Connected to Meshtastic network using device at {host}")
 
 
-def meshtasticSendMesage(msg, topic):
-     """Report an a message on Meshtastic against the given topic.
+def meshtasticSendMessage(msg):
+    """Report an a message on Meshtastic.
+
+    The message can then be retrieved from any node on the mesh or (more
+    likely) bridged to MQTT or a similar messaging platform.
 
     The message should be JSON encoded.
 
     @param message: the message
-    @param topic: topic to report against
     """
     payload = json.dumps(msg)
-    pub.sendMessage(topic, payload=payload)
+    packet = meshtasticInterface.sendText(payload)
+    chirpy.logger.debug(packet)

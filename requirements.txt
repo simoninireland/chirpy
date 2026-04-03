@@ -1,11 +1,9 @@
 ai_edge_litert
 soundfile
-pyaudio
+sounddevice
 python-dateutil
 suntime
 paho-mqtt
 typing_extensions; python_version <= '3.7'
 types-paho-mqtt
-#rpi.lgpio
-#spidev
 meshtastic
