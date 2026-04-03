@@ -29,6 +29,11 @@ mqttUsername = None
 mqttPassword = None
 
 
+# ---------- Meshtastic ----------
+
+meshtasticHost = "localhost"
+
+
 # ---------- SQLite database ----------
 
 sqlitedb = "chirpy.db"

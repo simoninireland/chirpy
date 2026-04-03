@@ -32,6 +32,9 @@ config.mqttHost = os.getenv("CHIRPY_MQTT_HOST", config.mqttHost)
 config.mqttUsername = os.getenv("CHIRPY_MQTT_USERNAME", config.mqttUsername)
 config.mqttPassword = os.getenv("CHIRPY_MQTT_PASSWORD", config.mqttPassword)
 
+# -- MQTT
+config.meshtasticHost = os.getenv("CHIRPY_MESH_HOST", config.meshtasticHost)
+
 # -- logging
 try:
     config.logLevel =  eval(os.getenv("CHIRPY_LOG_LEVEL", "config.logLevel"))

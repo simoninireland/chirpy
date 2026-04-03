@@ -25,7 +25,7 @@ import meshtastic.tcp_interface
 meshtasticInterface: meshtastic.mesh_interface = None
 
 
-def meshtasticConnect(host = "localhost"):
+def meshtasticConnect(host = chirpy.config.meshtasticHost):
     """Connect to a local Meshtastic device."""
     global meshtasticInterface
 

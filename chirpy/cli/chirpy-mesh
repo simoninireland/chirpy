@@ -38,7 +38,7 @@ def main():
     opts = parseargs(argv[1:])
 
     # read messages from stdin and re-transmit
-    chirpy.meshtasticConnect()
+    chirpy.meshtasticConnect(chirpy.config.meshtasticHost)
     while True:
         msg = chirpy.readJSON()
         if msg is None:
