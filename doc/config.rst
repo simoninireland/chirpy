@@ -72,6 +72,21 @@ These values are used only when reporting observations *via* an MQTT broker.
 | ``mqttPassword``  | None             | MQTT password                         | ``CHIRPY_MQTT_PASSWORD`` |
 +-------------------+------------------+---------------------------------------+--------------------------+
 
+Meshtastic mesh network
+-----------------------
+
+These values are used only when reporting observations *via* a
+Meshtastic mesh network. The Meshtastic device used as gateway can be
+identified either by a hostname or by a local serial device.
+
++----------------+-------------+------------------------------------------+----------------------+
+| Variable       | Default     | Description                              | Environment variable |
++================+=============+==========================================+======================+
+| ``meshHost``   | None        | Meshtastic device hostname or IP address | ``CHIRPY_MESH_HOST`` |
++----------------+-------------+------------------------------------------+----------------------+
+| ``meshPort``   | None        | Meshtastic device serial port            | ``CHIRPY_MESH_PORT`` |
++----------------+-------------+------------------------------------------+----------------------+
+
 SQLite database
 ---------------
 

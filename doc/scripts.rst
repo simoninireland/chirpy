@@ -41,7 +41,7 @@ speech. Classifications with confidence falling below the value of the
 ``chirpy-mqtt``
 ---------------
 
-This script bridges ``chirpy``'s shall pipelines to and from an MQTT
+This script bridges ``chirpy``'s shell pipelines to and from an MQTT
 message broker. The script works in three different ways:
 
 - sending messages to a topic;
@@ -49,7 +49,7 @@ message broker. The script works in three different ways:
 - passing messages between topics.
 
 The MQTT connection is set by the ``mqttHost``, ``mqttUsername``, and
-``mqttPassword`` configuration values. Thetopics are set using
+``mqttPassword`` configuration values. The topics are set using
 command-line options.
 
 +--------------------+-------------------------------+----------------+
@@ -65,6 +65,42 @@ command-line options.
 By default the script takes messages from standard input and sends
 them to standard output, either of which can be re-directed to a
 topic. The messages sent must be JSON-encoded.
+
+``chirpy-mesh``
+---------------
+
+This script bridges ``chirpy``'s shell pipelines to a Meshtastic
+network for transmission over LoRa radios. The script has two modes:
+
+- injecting messages to a Meshtastic mesh *via* a device; and
+- taking messages from the mesh and placing them into a pipeline.
+
+By default the script reads messages from its standard input and sends
+them to Meshtastic on the specified channel. Alternatively, the script
+will read messages *from* the Meshtastic channel and place their
+payloads on standard output, having removed disencapsulated the
+payload from the Meshtastic message frame. Usually only
+``chirpy``-recognised messages are output, although this can be
+changed to all messages for debugging purposes.
+
++--------------------+-------------------------------+----------------------+
+| Option             | Description                   | Default              |
++====================+===============================+======================+
+| ``--channel`` <ch> | Meshtastic channel            | 0                    |
+| ``-c`` <ch>        |                               |                      |
++--------------------+-------------------------------+----------------------+
+| ``--host`` <host>  | Meshtastic device hostname    | ``config.meshHost``  |
+| ``-H`` <host>      |                               | ``CHIRPY_MESH_HOST`` |
++--------------------+-------------------------------+----------------------+
+| ``--port`` <port>  | Meshtastic device serial port | ``config.meshPort``  |
+| ``-P`` <port>      |                               | ``CHIRPY_MESH_PORT`` |
++--------------------+-------------------------------+----------------------+
+| ``--from``         | Take messages from Meshtastic | False                |
+| ``-f``             |                               |                      |
++--------------------+-------------------------------+----------------------+
+| ``--all``          | Take all messages             | False                |
+| ``-a``             |                               |                      |
++--------------------+-------------------------------+----------------------+
 
 ``chirpy-logger``
 -----------------
