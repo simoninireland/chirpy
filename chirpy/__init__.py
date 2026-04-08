@@ -18,7 +18,9 @@
 # ---------- Configuration ----------
 
 from .config import *
+import sys
 import os
+from os.path import basename
 import logging
 
 # update configuration variables from the environment where defined
@@ -45,8 +47,11 @@ except Exception:
 # -- SQLite database
 config.sqlitedb = os.getenv("CHIRPY_SQLITE_DB", config.sqlitedb)
 
-# configure the system logger
-logger = logging.getLogger(__name__)
+# configure the global logger, using the name of the script
+scriptName = basename(sys.argv[0])
+if scriptName is None:
+    scriptName = __name__
+logger = logging.getLogger(scriptName)
 logging.basicConfig(level=config.logLevel)
 
 
