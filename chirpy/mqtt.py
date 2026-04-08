@@ -52,7 +52,10 @@ def onMessage(client, userData, message):
         callback(observation)
 
 
-def mqttConnect(host = None, username = None, password = None, topics = None):
+def mqttConnect(host = chirpy.config.mqttHost,
+                username = chirpy.config.mqttUsername,
+                password = chirpy.config.mqttPassword,
+                topics = None):
     """Connect to an MQTT broker.
 
     This function should be called before any observations are reported.

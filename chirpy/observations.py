@@ -21,6 +21,10 @@ from sys import stdout
 import json
 
 
+# Observation message type
+observationType : str = "observation"
+
+
 def makeObservation(timestamp, mli, confidence, node):
     """Create an observation record.
 
@@ -42,13 +46,26 @@ def makeObservation(timestamp, mli, confidence, node):
     """
     common, sci = chirpy.identify(mli)
 
-    return {'type': 'observation',
+    return {'type': observationType,
             'timestamp': timestamp,
             'nodeIdentifier': node,
             'id': int(mli),
             'confidence': float(confidence),
             'common': common,
             'sci': sci}
+
+
+def isObservation(message):
+    """Check whether the message is an observation.
+
+    This is determined by checking that there is a "type" element
+    whose value is observationType.
+
+    @param: message: the message, as JSON or a dict
+    @returns: True if the message is an observation."""
+    if isinstance(message, str):
+        message = json.loads(message)
+    return "type" in message.keys and message["type"] == observationType
 
 
 def printObservation(timestamp, mli, confidence, node, str = stdout):

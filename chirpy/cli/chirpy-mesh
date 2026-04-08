@@ -18,6 +18,7 @@
 
 import chirpy
 from sys import stdin, stdout, argv, exit
+from time import sleep
 from argparse import ArgumentParser
 
 
@@ -28,22 +29,58 @@ opts = None
 def parseargs(args):
     parser = ArgumentParser(prog='chirpy-mesh',
                             description='Bridge from chirpy pipelines to Meshtastic')
-    # for now there are no command line options available
+    parser.add_argument('--channel', '-c', dest='channel',
+                        action='store', default=0,
+                        help='Meshtastic channel to listen or send to')
+    parser.add_argument('--host', '-H', dest='meshHost',
+                        action='store', default=None,
+                        help='Host for Meshtastic device')
+    parser.add_argument('--port', '-P', dest='meshPort',
+                        action='store', default=None,
+                        help='Port for Meshtastic device')
+    parser.add_argument('--from', '-f', dest='fromMesh',
+                        action='store_const', const=True, default=False,
+                        help='Bridge messages from Meshtastic')
     return parser.parse_args(args)
+
+
+def onMessage(message):
+    """Meshtastic callback for each message.
+
+    We check whethere the message has a type we recognise,
+    and if so print it.
+
+    @param message: the JSON message"""
+    if chirpy.isObservation(message):
+        print(json.dumps(message))
+        print()
+        stdout.flush()
+        chirpy.logger.debug("Forwarded message from mesh")
+    else:
+        chirpy.logger.debug("Dropped non-chirpy message on mesh")
 
 
 def main():
     global opts
 
     opts = parseargs(argv[1:])
+    if opts.fromMesh:
+        chirpy.logger.info("Bridging Meshtastic messages to stdout")
 
-    # read messages from stdin and re-transmit
-    chirpy.meshtasticConnect(chirpy.config.meshtasticHost)
-    while True:
-        msg = chirpy.readJSON()
-        if msg is None:
-            exit(0)
-        chirpy.meshtasticSendMessage(msg)
+        # read message from Meshtastic and pass through
+        chirpy.meshtasticConnect(host=opts.meshHost, port=opts.meshPort, callback=onMessage)
+        while True:
+            sleep(10000)
+    else:
+        chirpy.logger.info("Piping messages to Meshtastic")
+
+        # read messages from stdin and re-transmit
+        chirpy.meshtasticConnect(host=opts.meshHost, port=opts.meshPort)
+        while True:
+            msg = chirpy.readJSON()
+            if msg is None:
+                exit(0)
+            chirpy.meshtasticSendMessage(msg)
 
 
 if __name__ == "__main__":

@@ -31,7 +31,8 @@ mqttPassword = None
 
 # ---------- Meshtastic ----------
 
-meshtasticHost = "localhost"
+meshHost = "localhost"
+meshPort = None
 
 
 # ---------- SQLite database ----------

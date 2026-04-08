@@ -57,7 +57,7 @@ def main():
 
     opts = parseargs(argv[1:])
     if opts.fromTopic is None and opts.toTopic is None:
-        chirpy.logger.debug("No MQTT topics specified, acting as a pipe")
+        chirpy.logger.info("No MQTT topics specified, acting as a pipe")
 
     topics = None
     if opts.fromTopic is None:

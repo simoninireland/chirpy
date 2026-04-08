@@ -1,4 +1,4 @@
-# Signal classification
+## Signal classification
 #
 # Copyright (C) 2025--2026 Simon Dobson
 #
@@ -20,22 +20,25 @@ import numpy as np
 from typing import Tuple, List
 
 # Import a version of Tensorflow Lite
+haveTensorflow = False
 try:
     # prefer Tensorflow Lite for Microcontrollers
     from ai_edge_litert.interpreter import Interpreter
     chirpy.logger.debug("Running on AI edge")
+    haveTensorflow = True
 except ModuleNotFoundError:
     try:
         from tflite_runtime.interpreter import Interpreter
         chirpy.logger.debug("Running on TFLite for Micro")
+        haveTensorflow = True
     except ModuleNotFoundError:
         try:
             # fall-back to Tensorflow Lite
             from tensorflow.lite.interpreter import Interpreter
             chirpy.logger.debug("Running on TFLite")
+            haveTensorflow = True
         except ModuleNotFoundError:
-            chirpy.logger.critical("Can't find a usable Tensorflow library!")
-            exit(1)
+            chirpy.logger.debug("Can't find a usable Tensorflow library")
 
 
 # Global model
@@ -67,6 +70,11 @@ def loadModel(fn):
     @param fn: the model filename
     """
     global interpreter, inputLayerIndex, outputLayerIndex
+
+    # fail if we haven't managed to load a Tensorflow library
+    if not haveTensorflow:
+        chirpy.logger.critical("No Tensorflow available for classification")
+        exit(1)
 
     interpreter = Interpreter(model_path=fn)
     interpreter.allocate_tensors()

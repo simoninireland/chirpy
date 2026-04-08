@@ -19,18 +19,68 @@ import chirpy
 import json
 import meshtastic
 import meshtastic.tcp_interface
+import meshtastic.serial_interface
+from pubsub import pub
 
 
 # Global Meshtastic device
 meshtasticInterface: meshtastic.mesh_interface = None
 
 
-def meshtasticConnect(host = chirpy.config.meshtasticHost):
-    """Connect to a local Meshtastic device."""
+def meshtasticConnect(host = None, port = None,
+                      callback = None):
+    """Connect to a Meshtastic device.
+
+    This function should ebe called before any observations are reported.
+
+    Neither host nor port needs to be specified. If both are provided,
+    the port is used; if neither is provided, we use the globally-configured
+    host if there is one, or the globally-configured port if not.
+
+    The callback, if provided, should take ther received message as a
+    parameter.
+
+    @param host: (optional) the Meshtastic host
+    @param port: (optional) the device serial port
+    @param callback: (optional) callback for each message received
+
+    """
     global meshtasticInterface
 
-    meshtasticInterface = meshtastic.tcp_interface.TCPInterface(host)
-    chirpy.logger.info(f"Connected to Meshtastic network using device at {host}")
+    # sort out the logic of the various connection options
+    if host is None and port is None:
+        host = chirpy.config.meshHost
+        if host is None:
+            port = chirpy.config.meshPort
+    elif host is not None and port is not None:
+        chirpy.logger.warn("Preferring the port specified for Meshtastic")
+        host = None
+
+    # connect to the mesh
+    if host is None:
+        meshtasticInterface = meshtastic.serial_interface.SerialInterface(port)
+        chirpy.logger.info(f"Connected to Meshtastic network using device {port}")
+    else:
+        meshtasticInterface = meshtastic.tcp_interface.TCPInterface(host)
+        chirpy.logger.info(f"Connected to Meshtastic network using device at {host}")
+
+    # install callback if provided
+    if callback is not None:
+        # define the Meshtastic-level callback to call the chirpy-level callback
+        def onReceive(packet, topic=pub.AUTO_TOPIC):
+            # parse the message
+            message = json.loads(packet)
+            payload = message.get("payload")
+            if payload is not None:
+                # check that the payload is of a type we recognise
+                if chirpy.isObservation(payload):
+                    # yes, call the callback
+                    callback(payload)
+                else:
+                    chirpy.logger.debug("Dropped non-chirpy message")
+
+        # subscribe the the message channel
+        pub.subscribe(onReceive, "meshtastic.receive")
 
 
 def meshtasticSendMessage(msg):

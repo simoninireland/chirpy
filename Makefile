@@ -17,7 +17,6 @@
 
 PACKAGENAME = chirpy
 
-
 # ----- Sources -----
 
 # Source code
@@ -29,12 +28,14 @@ SOURCES_CODE = \
 	chirpy/classify.py \
 	chirpy/db.py \
 	chirpy/mqtt.py \
+	chirpy/meshtastic.py \
 	chirpy/observations.py
 SOURCES_SCRIPTS= \
 	chirpy/cli/chirpy-sample \
 	chirpy/cli/chirpy-classify \
 	chirpy/cli/chirpy-logger \
 	chirpy/cli/chirpy-mqtt \
+	chirpy/cli/chirpy-mesh \
 	chirpy/cli/chirpy-list
 
 # Tests
@@ -71,6 +72,9 @@ SOURCES_DOCUMENTATION = \
 SOURCES_DOC_EXTRA = \
 	doc/pipeline.png
 
+# Pin to a more specific language version if needed for compatibility
+PYTHON_VERSION=3
+
 
 # ----- Models -----
 
@@ -89,7 +93,7 @@ PERCH_MODEL = # google/bird-vocalization-classifier/tensorFlow2/perch_v2_cpu
 # ----- Tools -----
 
 # Base commands
-PYTHON = python3
+PYTHON = python$(PYTHON_VERSION)
 PYTEST = pytest
 PIP = pip
 GIT = git

@@ -32,8 +32,9 @@ config.mqttHost = os.getenv("CHIRPY_MQTT_HOST", config.mqttHost)
 config.mqttUsername = os.getenv("CHIRPY_MQTT_USERNAME", config.mqttUsername)
 config.mqttPassword = os.getenv("CHIRPY_MQTT_PASSWORD", config.mqttPassword)
 
-# -- MQTT
-config.meshtasticHost = os.getenv("CHIRPY_MESH_HOST", config.meshtasticHost)
+# -- Meshtastic
+config.meshHost = os.getenv("CHIRPY_MESH_HOST", config.meshHost)
+config.meshPort = os.getenv("CHIRPY_MESH_PORT", config.meshPort)
 
 # -- logging
 try:
@@ -56,7 +57,7 @@ from .utils import readJSON, filenameForTimestamp
 from .audiofiles import load
 from .audiosample import record, makeSample, printSample
 from .classify import loadModel, loadLabels, segment, classify, mostLikelyIndex, identify, getLabelsMapping
-from .observations import makeObservation, printObservation
+from .observations import makeObservation, isObservation, printObservation
 from .mqtt import mqttConnect, mqttSendMessage
 from .meshtastic import meshtasticConnect, meshtasticSendMessage
 from .db import dbOpenConnection, dbRecordObservation, dbAllObservationsOf, dbAllObservationsBetween, dbCountObservationsBetween
