@@ -170,17 +170,17 @@ def mostLikelyIndex(prediction):
     mostConfident = max(confidencePerSample)
     index =  mostConfidentPerSample[mostConfidentSample]
 
-    # reject if confidence is below threshold
-    if mostConfident < chirpy.config.confidenceThreshold:
-        _, common = identify(index)
-        chirpy.logger.debug(f"Ignored low-confidence ({mostConfident}) observation of {common}")
-        return None, None
-
     # reject if species class is on the ignored list
     if labelIsIgnored(index):
         # ignore the classification
         _, common = identify(index)
         chirpy.logger.debug(f"Ignored observation of {common}")
+        return None, None
+
+    # reject if confidence is below threshold
+    if mostConfident < chirpy.config.confidenceThreshold:
+        _, common = identify(index)
+        chirpy.logger.debug(f"Ignored low-confidence ({mostConfident}) observation of {common}")
         return None, None
 
     return index, mostConfident
