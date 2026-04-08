@@ -67,10 +67,10 @@ def meshtasticConnect(host = None, port = None,
     # install callback if provided
     if callback is not None:
         # define the Meshtastic-level callback to call the chirpy-level callback
-        def onReceive(packet, topic=pub.AUTO_TOPIC):
+        def onReceive(packet, interface):
             # parse the message
             message = json.loads(packet)
-            payload = message.get("payload")
+            payload = message.get("payload", None)
             if payload is not None:
                 # check that the payload is of a type we recognise
                 if chirpy.isObservation(payload):

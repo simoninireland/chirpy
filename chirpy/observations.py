@@ -44,7 +44,7 @@ def makeObservation(timestamp, mli, confidence, node):
     @param node: identifier of node making the observation
     @returns: a dict
     """
-    common, sci = chirpy.identify(mli)
+    sci, common = chirpy.identify(mli)
 
     return {'type': observationType,
             'timestamp': timestamp,
