@@ -41,6 +41,9 @@ def parseargs(args):
     parser.add_argument('--from', '-f', dest='fromMesh',
                         action='store_const', const=True, default=False,
                         help='Bridge messages from Meshtastic')
+    parser.add_argument('--all', '-a', dest='showAll',
+                        action='store_const', const=True, default=False,
+                        help='Pass all messages, recognised or not')
     return parser.parse_args(args)
 
 
@@ -51,7 +54,7 @@ def onMessage(message):
     and if so print it.
 
     @param message: the JSON message"""
-    if chirpy.isObservation(message):
+    if chirpy.isObservation(message) or opts.showAll:
         print(json.dumps(message))
         print()
         stdout.flush()
@@ -65,7 +68,10 @@ def main():
 
     opts = parseargs(argv[1:])
     if opts.fromMesh:
-        chirpy.logger.info("Bridging Meshtastic messages to stdout")
+        if opts.showAll:
+            chirpy.logger.info("Bridging all Meshtastic messages to stdout")
+        else:
+            chirpy.logger.info("Bridging chirpy Meshtastic messages to stdout")
 
         # read message from Meshtastic and pass through
         chirpy.meshtasticConnect(host=opts.meshHost, port=opts.meshPort, callback=onMessage)
