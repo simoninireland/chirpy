@@ -45,16 +45,56 @@ local database,
    chirpy-mqtt --from "chirpy.bird" | chirpy-logger
 
 
+Local *and* centralised storage
+-------------------------------
+
+We might want to combine both local storage and reporting to a
+centralised database, for robustness in case messages get lost in
+flight. To do this we need to modify our pipeline so that we take a
+copy of all messages being sent over the network and store them
+locally.
+
+We can do this by using a couple of Linux tools:
+
+- ``tee``, that sends data to a file as well as passing it along the
+  pipeline; and
+- ``mkfifo``, that creates a file that's actually a first-in/first-out
+  pipe (a FIFO).
+
+The trick is to capture the messages into a FIFO and use that to feed
+another pipeline.
+
+.. code:: shell
+
+   # create the FIFO
+   mkfifo /tmp/chirpyfifo
+
+   # run the classifier/reporting pipeline, capturing to the FIFO
+   chirpy-sample | chirpy-classify | tee /tmp/chirpyfifo | chirpy-mqtt --to "chirpy.bird" &
+
+   # use the data coming down the FIFO for the local logger
+   cat /tmp/chirpyfifo | chirpy-logger
+
+
 .. _mesh-client-use-case:
 
 On-device classification shared over Meshtastic
 -----------------------------------------------
 
-A classifier sends its observations to Meshtastic via a local radio.
+A classifier sends its observations to Meshtastic *via* a local radio.
 
 .. code:: shell
 
    chirpy-sample | chirpy-classify | chirpy-mesh
+
+
+Some Meshtastic nodes connect to their radio over a serial port.
+Typically this will be ``/dev/ttyACM0`` on Linux (or sometimes
+``/dev/ttyUSB0``). In this case we need to connect over this port.
+
+.. code:: shell
+
+   chirpy-sample | chirpy-classify | chirpy-mesh --port /dev/ttyACM0
 
 
 .. _mesh-server-mqtt-use-case:
@@ -79,7 +119,7 @@ starting with "chirpy/". If we use this as the "root topic" from
 Meshtastic, then this will pick up all messages sent from the mesh
 [1]_.
 
-he ``disencapsulate`` option extracts the field named "payload" from
+The ``disencapsulate`` option extracts the field named "payload" from
 the message, discarding all the extra Meshtastic information (which
 may be useful in itself in some applications).
 
