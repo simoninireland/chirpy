@@ -35,21 +35,34 @@ def parseargs(args):
     parser.add_argument('--to', '-t', dest='toTopic',
                         action='store', default=None,
                         help='Topic to send messages to')
+    parser.add_argument('--disencapsulate', '-d', dest='payloadField',
+                        action='store', default=None,
+                        help='Field within the message containing the message payload')
     return parser.parse_args(args)
 
 
-def onMessage(msg):
+def onMessage(message):
     """Print any message received onto stdout.
 
-    :param mesg: the JSON message"""
+    :param message: the JSON message"""
+
+    # disencapsulate if requested
+    if opts.payloadField is not None:
+        message = message.get(opts.payloadField, None)
+        if message is None:
+            # message did not have a payload, return
+            chirpy.logger.debug(f"Couldn't extract field {opts.payloadField} from message")
+            return
+
+    # forward the message
     if opts.toTopic is None:
         # send message to stdout
-        print(json.dumps(msg))
+        print(json.dumps(message))
         print()
         stdout.flush()
     else:
         # send message to the specified target topic
-        chirpy.mqttSendMessage(msg, opts.toTopic)
+        chirpy.mqttSendMessage(message, opts.toTopic)
 
 
 def main():

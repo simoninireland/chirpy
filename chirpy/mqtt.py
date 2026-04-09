@@ -37,6 +37,30 @@ def onConnect(client, userData, flags, reason_code, properties):
         chirpy.logger.debug(f"Subscribed to topic {topic}")
 
 
+def getCallback(topic):
+    """Return the callback associated with the given topic.
+
+    If the topic is a wildcard (ending in #) then the first callback
+    associated with a matching topic is returned.
+
+    @param topic: the topic
+    @returns: the callback or None"""
+    chirpy.logger.debug(f"Callback for {topic}")
+    for t in mqttTopicCallbacks.keys():
+        chirpy.logger.debug(f"test {topic} against {t}")
+        wildcard = t.find("#")
+        if wildcard > -1:
+            if t[:wildcard - 1] == topic[:wildcard - 1]:
+                chirpy.logger.debug(f"Matched wildcard {t} to {topic}")
+                return mqttTopicCallbacks[t]
+        else:
+             if t == topic:
+                chirpy.logger.debug(f"Matched literal {t} to {topic}")
+                return mqttTopicCallbacks[t]
+
+    return None
+
+
 def onMessage(client, userData, message):
     """MQTT callback for each message.
 
@@ -44,12 +68,15 @@ def onMessage(client, userData, message):
     in terms of observations rather than strings.
     """
     topic, payload = message.topic, message.payload
-    callback = mqttTopicCallbacks.get(topic, None)
+    callback = getCallback(topic)
     if callback is None:
-        chirpy.logger.warning(f"Ignored a message on a topic we didn't subscribe to ({topic})")
+        chirpy.logger.warning(f"Ignored a message on a topic ({topic}) we didn't subscribe to")
     else:
-        observation = json.loads(payload)
-        callback(observation)
+        try:
+            observation = json.loads(payload)
+            callback(observation)
+        except:
+            chirpy.logger.error(f"Undecodeable JSON message received for topic ({topic})")
 
 
 def mqttConnect(host = chirpy.config.mqttHost,
@@ -71,13 +98,6 @@ def mqttConnect(host = chirpy.config.mqttHost,
     @param topics: (optional) dict or list of pairs of topics and callbacks to subscribe to (defaults to none)
     """
     global mqttClient, mqttTopicCallbacks
-
-    if host is None:
-        host = chirpy.config.mqttHost
-    if username is None:
-        username = chirpy.config.mqttUsername
-    if password is None:
-        password = chirpy.config.mqttPassword
 
     mqttClient = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     mqttClient.username_pw_set(username, password)
