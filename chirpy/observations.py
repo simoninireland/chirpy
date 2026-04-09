@@ -61,7 +61,7 @@ def isObservation(message):
     This is determined by checking that there is a "type" element
     whose value is observationType.
 
-    @param: message: the message, as JSON or a dict
+    @param: message: the message, as a JSON string or a dict
     @returns: True if the message is an observation."""
     if isinstance(message, str):
         message = json.loads(message)
