@@ -1,15 +1,22 @@
+.. _config:
+
 Configuration values
 ====================
 
 ``chirpy`` can be configured in several ways:
 
 - Most values have sensible defaults where possible
-- Scripts take command-line options that can set some configuration
-  values
-- The values can be set programmatically by accessing variables in
-  ``chirpy.config``
+- :ref:`Scripts <scripts>` take command-line options that can set some
+  configuration values
+- The values can be set programmatically by accessing variables in the
+  ``chirpy.config`` module
 - Some values can also be set from a program's environment by setting
   corresponding environment variables.
+
+The use of environment variables is recommended. This allows all tools
+in a pipeline to easily share a configuration so that, for example,
+they will all use the same MQTT broker. The other mechanisms are
+available for more complicated cases.
 
 Node identification
 -------------------
@@ -57,6 +64,8 @@ evaluated in an environment where the ``logging`` module is imported,
 so a value such as "logging.CRITICAL" will set the logging level to
 ``logging.CRITICAL``.
 
+.. _mqtt-config:
+
 MQTT broker
 -----------
 
@@ -71,6 +80,8 @@ These values are used only when reporting observations *via* an MQTT broker.
 +-------------------+------------------+---------------------------------------+--------------------------+
 | ``mqttPassword``  | None             | MQTT password                         | ``CHIRPY_MQTT_PASSWORD`` |
 +-------------------+------------------+---------------------------------------+--------------------------+
+
+.. _mesh-config:
 
 Meshtastic mesh network
 -----------------------

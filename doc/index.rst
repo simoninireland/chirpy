@@ -17,6 +17,7 @@ of acoustic data and reporting the results wirelessly.
 
    install
    architecture
+   networking
    scripts
    use-cases
    config

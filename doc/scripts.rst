@@ -1,5 +1,18 @@
+.. _scripts:
+
 Shell scripts
 =============
+
+The shell scripts are a convenient way to interact with ``chirpy``.
+They are intended to be pipelined together to provide a complete
+sampling, classification, reporting, and storage pipeline, with
+optional networking components. See :ref:`use-cases` for examples of
+common scenarios.
+
+Below we provide brief descriptiosn of the tools and their
+command-line options. Where applicable we relate the options to
+configuration variables that can be set in the tools' environment. See
+:ref:`config` for more details of the configuration possibilities.
 
 ``chirpy-sample``
 -----------------
@@ -52,19 +65,30 @@ The MQTT connection is set by the ``mqttHost``, ``mqttUsername``, and
 ``mqttPassword`` configuration values. The topics are set using
 command-line options.
 
-+--------------------+-------------------------------+----------------+
-| Option             | Description                   | Default        |
-+====================+===============================+================+
-| ``--from`` <topic> | Topic to take messages from   | ``sys.stdin``  |
-| ``-f`` <topic>     |                               |                |
-+--------------------+-------------------------------+----------------+
-| ``--to`` <topic>   | Topic to send messages to     | ``sys.stdout`` |
-| ``-t`` <topic>     |                               |                |
-+--------------------+-------------------------------+----------------+
++--------------------------------+-------------------------------+----------------+
+| Option                         | Description                   | Default        |
++================================+===============================+================+
+| - ``--from`` <topic>           | Topic to take messages from   | ``sys.stdin``  |
+| - ``-f`` <topic>               |                               |                |
++--------------------------------+-------------------------------+----------------+
+| - ``--to`` <topic>             | Topic to send messages to     | ``sys.stdout`` |
+| - ``-t`` <topic>               |                               |                |
++--------------------------------+-------------------------------+----------------+
+| - ``--disencapsulate`` <field> | Extract message payload       |                |
+| - ``-d`` <field>               |                               |                |
++--------------------------------+-------------------------------+----------------+
 
 By default the script takes messages from standard input and sends
 them to standard output, either of which can be re-directed to a
 topic. The messages sent must be JSON-encoded.
+
+Be default the whole message is passed. However, in some systems the
+incoming message is actually encapsulated as the payload in a larger
+message. (This happens in Meshtastic, for example.) To deal with the,
+the ``--disencapsulate`` option will extract he field carrying the
+actual message we're interested in (the payload) from the larger
+message and forward that. This saves other tools from being able to
+process larger message formats.
 
 ``chirpy-mesh``
 ---------------
@@ -83,24 +107,24 @@ payload from the Meshtastic message frame. Usually only
 ``chirpy``-recognised messages are output, although this can be
 changed to all messages for debugging purposes.
 
-+--------------------+-------------------------------+----------------------+
-| Option             | Description                   | Default              |
-+====================+===============================+======================+
-| ``--channel`` <ch> | Meshtastic channel            | 0                    |
-| ``-c`` <ch>        |                               |                      |
-+--------------------+-------------------------------+----------------------+
-| ``--host`` <host>  | Meshtastic device hostname    | ``config.meshHost``  |
-| ``-H`` <host>      |                               | ``CHIRPY_MESH_HOST`` |
-+--------------------+-------------------------------+----------------------+
-| ``--port`` <port>  | Meshtastic device serial port | ``config.meshPort``  |
-| ``-P`` <port>      |                               | ``CHIRPY_MESH_PORT`` |
-+--------------------+-------------------------------+----------------------+
-| ``--from``         | Take messages from Meshtastic | False                |
-| ``-f``             |                               |                      |
-+--------------------+-------------------------------+----------------------+
-| ``--all``          | Take all messages             | False                |
-| ``-a``             |                               |                      |
-+--------------------+-------------------------------+----------------------+
++----------------------+-------------------------------+----------------------+
+| Option               | Description                   | Default              |
++======================+===============================+======================+
+| - ``--channel`` <ch> | Meshtastic channel            | 0                    |
+| - ``-c`` <ch>        |                               |                      |
++----------------------+-------------------------------+----------------------+
+| - ``--host`` <host>  | Meshtastic device hostname    | ``CHIRPY_MESH_HOST`` |
+| - ``-H`` <host>      |                               |                      |
++----------------------+-------------------------------+----------------------+
+| - ``--port`` <port>  | Meshtastic device serial port | ``CHIRPY_MESH_PORT`` |
+| - ``-P`` <port>      |                               |                      |
++----------------------+-------------------------------+----------------------+
+| - ``--from``         | Take messages from Meshtastic | False                |
+| - ``-f``             |                               |                      |
++----------------------+-------------------------------+----------------------+
+| - ``--all``          | Take all messages             | False                |
+| - ``-a``             |                               |                      |
++----------------------+-------------------------------+----------------------+
 
 ``chirpy-logger``
 -----------------
@@ -121,21 +145,21 @@ The defaults are to print a human-readable list of timestamp and
 common species name for all observations between start-of-day and now.
 This can be change using the following command-line options.
 
-+-------------------+-------------------------------+----------------+
-| Option            | Description                   | Default        |
-+===================+===============================+================+
-| ``--from`` <time> | Start time for observations   | Start of today |
-| ``-f`` <time>     |                               |                |
-+-------------------+-------------------------------+----------------+
-| ``--to`` <time>   | End time for observations     | Now            |
-| ``-t`` <time>     |                               |                |
-+-------------------+-------------------------------+----------------+
-| ``--csv``         | Output observations as CSV    | False          |
-| ``-c``            |                               |                |
-+-------------------+-------------------------------+----------------+
-| ``--number``      | Output counts of species      | False          |
-| ``-n``            |                               |                |
-+-------------------+-------------------------------+----------------+
++---------------------+-------------------------------+----------------+
+| Option              | Description                   | Default        |
++=====================+===============================+================+
+| - ``--from`` <time> | Start time for observations   | Start of today |
+| - ``-f`` <time>     |                               |                |
++---------------------+-------------------------------+----------------+
+| - ``--to`` <time>   | End time for observations     | Now            |
+| - ``-t`` <time>     |                               |                |
++---------------------+-------------------------------+----------------+
+| - ``--csv``         | Output observations as CSV    | False          |
+| - ``-c``            |                               |                |
++---------------------+-------------------------------+----------------+
+| - ``--number``      | Output counts of species      | False          |
+| - ``-n``            |                               |                |
++---------------------+-------------------------------+----------------+
 
 The start and end times accept strings in any format accepted by the
 `dateutil`_ package, for example "10:33" to a time today or "9 feb"
