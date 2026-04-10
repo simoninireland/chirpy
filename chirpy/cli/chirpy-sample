@@ -100,6 +100,7 @@ def main():
                 sunset = sun.get_sunset_time(tomorrow + timedelta(days=1), tz) + offset
 
                 # pause until sunrise
+                chirpy.logger.info(f"Sleeping until {sunrise} (time is now {now})")
                 sleepUntil(sunrise)
                 now = datetime.now(tz)
                 chirpy.logger.info(f"Sampling until {sunset} (time is now {now})")
