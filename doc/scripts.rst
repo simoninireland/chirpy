@@ -23,15 +23,15 @@ JSON sample object holding the timestamped sample. Sampling continues
 indefinitely by default, but this can be changed using the following
 options.
 
-+-------------------+-------------------------------+----------------+
-| Option            | Description                   | Default        |
-+===================+===============================+================+
-| ``--nighttime``   | Pause sampling at night       | False          |
-| ``-n``            |                               |                |
-+-------------------+-------------------------------+----------------+
-| ``--samples`` <n> | Take n samples before exiting | Unbounded      |
-| ``-N`` <n>        |                               |                |
-+-------------------+-------------------------------+----------------+
++---------------------+-------------------------------+----------------+
+| Option              | Description                   | Default        |
++=====================+===============================+================+
+| - ``--nighttime``   | Pause sampling at night       | False          |
+| - ``-p``            |                               |                |
++---------------------+-------------------------------+----------------+
+| - ``--samples`` <n> | Take n samples before exiting | Unbounded      |
+| - ``-n`` <n>        |                               |                |
++---------------------+-------------------------------+----------------+
 
 The duration of each sample is set by the ``sampleDuration``
 configuration variable. Night-time is defined by the local sunset and
