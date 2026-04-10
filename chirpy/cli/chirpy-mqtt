@@ -38,6 +38,9 @@ def parseargs(args):
     parser.add_argument('--disencapsulate', '-d', dest='payloadField',
                         action='store', default=None,
                         help='Field within the message containing the message payload')
+    parser.add_argument('--all', '-a', dest='showAll',
+                        action='store_const', const=True, default=False,
+                        help='Pass all messages, recognised or not')
     return parser.parse_args(args)
 
 
@@ -52,6 +55,12 @@ def onMessage(message):
         if message is None:
             # message did not have a payload, return
             chirpy.logger.debug(f"Couldn't extract field {opts.payloadField} from message")
+            return
+
+    # test for acceptance
+    if not opts.showAll:
+        if not chirpy.isObservation(message):
+            chirpy.logger.debug("Non-chirpy message dropped")
             return
 
     # forward the message

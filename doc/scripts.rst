@@ -77,18 +77,25 @@ command-line options.
 | - ``--disencapsulate`` <field> | Extract message payload       |                |
 | - ``-d`` <field>               |                               |                |
 +--------------------------------+-------------------------------+----------------+
+| - ``-all``                     | Pass all messages             | False          |
+| - ``-a``                       |                               |                |
++--------------------------------+-------------------------------+----------------+
 
 By default the script takes messages from standard input and sends
 them to standard output, either of which can be re-directed to a
 topic. The messages sent must be JSON-encoded.
 
-Be default the whole message is passed. However, in some systems the
+By default the whole message is passed. However, in some systems the
 incoming message is actually encapsulated as the payload in a larger
 message. (This happens in Meshtastic, for example.) To deal with the,
 the ``--disencapsulate`` option will extract he field carrying the
 actual message we're interested in (the payload) from the larger
 message and forward that. This saves other tools from being able to
 process larger message formats.
+
+The ``--all`` flag causes the script to pass all messages it receives.
+Without this flag, it only passes messages that are recognises by
+``chirpy``.
 
 ``chirpy-mesh``
 ---------------
