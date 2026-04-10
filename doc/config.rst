@@ -110,7 +110,7 @@ These variables set up the SQLite database used for storing observations.
 +-------------------+------------------+---------------------------------------+----------------------+
 | Variable          | Default          | Description                           | Environment variable |
 +===================+==================+=======================================+======================+
-| ``sqlitedb``      | ``chirpy.db``    | File name for SQLite database         | ``CHIRPY_SQLITE_DB`` |
+| ``sqlitedb``      | "chirpy.db"      | File name for SQLite database         | ``CHIRPY_SQLITE_DB`` |
 +-------------------+------------------+---------------------------------------+----------------------+
 
 
