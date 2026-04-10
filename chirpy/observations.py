@@ -65,7 +65,7 @@ def isObservation(message):
     @returns: True if the message is an observation."""
     if isinstance(message, str):
         message = json.loads(message)
-    return "type" in message.keys and message["type"] == observationType
+    return message.get("type", None) == observationType
 
 
 def printObservation(timestamp, mli, confidence, node, str = stdout):
