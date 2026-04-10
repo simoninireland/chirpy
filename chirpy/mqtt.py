@@ -45,17 +45,13 @@ def getCallback(topic):
 
     @param topic: the topic
     @returns: the callback or None"""
-    chirpy.logger.debug(f"Callback for {topic}")
     for t in mqttTopicCallbacks.keys():
-        chirpy.logger.debug(f"test {topic} against {t}")
         wildcard = t.find("#")
         if wildcard > -1:
             if t[:wildcard - 1] == topic[:wildcard - 1]:
-                chirpy.logger.debug(f"Matched wildcard {t} to {topic}")
                 return mqttTopicCallbacks[t]
         else:
              if t == topic:
-                chirpy.logger.debug(f"Matched literal {t} to {topic}")
                 return mqttTopicCallbacks[t]
 
     return None
