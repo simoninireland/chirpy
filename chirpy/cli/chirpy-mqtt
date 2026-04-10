@@ -39,7 +39,7 @@ def parseargs(args):
                         action='store', default=None,
                         help='Field within the message containing the message payload')
     parser.add_argument('--all', '-a', dest='showAll',
-                        action='store_const', const=True, default=False,
+                        action='store_true', default=False,
                         help='Pass all messages, recognised or not')
     return parser.parse_args(args)
 

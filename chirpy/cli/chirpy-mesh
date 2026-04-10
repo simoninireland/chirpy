@@ -39,10 +39,10 @@ def parseargs(args):
                         action='store', default=None,
                         help='Port for Meshtastic device')
     parser.add_argument('--from', '-f', dest='fromMesh',
-                        action='store_const', const=True, default=False,
+                        action='store_true', default=False,
                         help='Bridge messages from Meshtastic')
     parser.add_argument('--all', '-a', dest='showAll',
-                        action='store_const', const=True, default=False,
+                        action='store_true', default=False,
                         help='Pass all messages, recognised or not')
     return parser.parse_args(args)
 
