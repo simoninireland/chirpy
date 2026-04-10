@@ -65,21 +65,24 @@ The MQTT connection is set by the ``mqttHost``, ``mqttUsername``, and
 ``mqttPassword`` configuration values. The topics are set using
 command-line options.
 
-+--------------------------------+-------------------------------+----------------+
-| Option                         | Description                   | Default        |
-+================================+===============================+================+
-| - ``--from`` <topic>           | Topic to take messages from   | ``sys.stdin``  |
-| - ``-f`` <topic>               |                               |                |
-+--------------------------------+-------------------------------+----------------+
-| - ``--to`` <topic>             | Topic to send messages to     | ``sys.stdout`` |
-| - ``-t`` <topic>               |                               |                |
-+--------------------------------+-------------------------------+----------------+
-| - ``--disencapsulate`` <field> | Extract message payload       |                |
-| - ``-d`` <field>               |                               |                |
-+--------------------------------+-------------------------------+----------------+
-| - ``-all``                     | Pass all messages             | False          |
-| - ``-a``                       |                               |                |
-+--------------------------------+-------------------------------+----------------+
++--------------------------------+---------------------------------+----------------+
+| Option                         | Description                     | Default        |
++================================+=================================+================+
+| - ``--from`` <topic>           | Topic to take messages from     | ``sys.stdin``  |
+| - ``-f`` <topic>               |                                 |                |
++--------------------------------+---------------------------------+----------------+
+| - ``--to`` <topic>             | Topic to send messages to       | ``sys.stdout`` |
+| - ``-t`` <topic>               |                                 |                |
++--------------------------------+---------------------------------+----------------+
+| - ``--disencapsulate`` <field> | Extract message payload         |                |
+| - ``-d`` <field>               |                                 |                |
++--------------------------------+---------------------------------+----------------+
+| - ``--all``                    | Pass all messages               | False          |
+| - ``-a``                       |                                 |                |
++--------------------------------+---------------------------------+----------------+
+| - ``--roottopic``              | Subscribe to messages from      |                |
+| - ``-r``                       | Meshtastic with this root topic |                |
++--------------------------------+---------------------------------+----------------+
 
 By default the script takes messages from standard input and sends
 them to standard output, either of which can be re-directed to a
@@ -96,6 +99,13 @@ process larger message formats.
 The ``--all`` flag causes the script to pass all messages it receives.
 Without this flag, it only passes messages that are recognises by
 ``chirpy``.
+
+One can integrate MQTT with Meshtastic to retrieve observations from a
+mesh (see :ref:`mesh-networking`). To simplify this integration, the
+``--roottopic`` option takes the root topic set at the Meshtastic node
+that is reporting messages to MQTT. It subscribes to the appropriate
+reporting topic and sets the disencapsulation to extract the message
+payload [1]_.
 
 ``chirpy-mesh``
 ---------------
@@ -174,3 +184,9 @@ for a specific date.
 
 
 .. _dateutil: https://dateutil.readthedocs.io/en/stable/
+
+.. rubric:: Footnotes
+
+.. [1] In detail, if the root topic is "chirpy" then the
+       ``--roottopic`` option will subscribe to the wildcard channel
+       "chirpy/2/json/#" and disencapsulate the "payload" field.

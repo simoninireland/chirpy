@@ -38,6 +38,8 @@ to MQTT for onward transmission (see the :ref:`mqtt-client-use-case`
 use case), or retrieve messages from MQTT for processing and storage
 (see the :ref:`mqtt-server-use-case` use case).
 
+.. _mesh-networking:
+
 Using Meshtastic
 ----------------
 

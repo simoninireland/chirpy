@@ -41,6 +41,9 @@ def parseargs(args):
     parser.add_argument('--all', '-a', dest='showAll',
                         action='store_true', default=False,
                         help='Pass all messages, recognised or not')
+    parser.add_argument('--roottopic', '-r', dest='rootTopic',
+                        action='store', default=None,
+                        help='Root topic for Meshtastic-derived  messages')
     return parser.parse_args(args)
 
 
@@ -78,10 +81,15 @@ def main():
     global opts
 
     opts = parseargs(argv[1:])
-    if opts.fromTopic is None and opts.toTopic is None:
+    if opts.fromTopic is None and opts.toTopic is None and opts.rootTopic is None:
         chirpy.logger.info("No MQTT topics specified, acting as a pipe")
 
-    topics = None
+    # handle Meshtastic messages
+    if opts.rootTopic is not None:
+        opts.fromTopic = f"{opts.rootTopic}/2/json/#"
+        opts.payloadField = "payload"
+        chirpy.logger.info(f'Subscribed to Meshtastic messsages with root topic "{opts.rootTopic}"')
+
     if opts.fromTopic is None:
         # read messages from stdin and re-transmit
         chirpy.mqttConnect()
