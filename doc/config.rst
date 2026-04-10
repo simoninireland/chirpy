@@ -38,7 +38,11 @@ The node identifier will be passed in all JSON objects within
 The latitude and longitude are used when computing sunrise and sunset
 times (for avoiding sampling at night), and defaults to `St Andrews`_.
 There's no need to be too precise about these values: within a degree
-will be enough to enable the functionality.
+will be enough to enable this functionality.
+
+However, for systems with lots of sensors spread over an area, or
+where the exact locations of the observations are important, providing
+a more precise location may be useful.
 
 System tuning
 -------------
