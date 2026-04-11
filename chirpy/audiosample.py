@@ -66,7 +66,7 @@ def makeSample(timestamp, duration, sig, sampleRate, stored = False):
     # mask-out sub-seconds in the timestamp
     ts = copy(timestamp).replace(microsecond=0)
 
-    return {'type': 'sample',
+    return {'type': chirpy.sampleType,
             'timestamp': ts.isoformat(),
             'nodeIdentifier': chirpy.config.nodeIdentifier,
             'duration': duration,

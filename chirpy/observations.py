@@ -21,10 +21,6 @@ from sys import stdout
 import json
 
 
-# Observation message type
-observationType : str = "observation"
-
-
 def makeObservation(timestamp, mli, confidence, node):
     """Create an observation record.
 
@@ -46,7 +42,7 @@ def makeObservation(timestamp, mli, confidence, node):
     """
     sci, common = chirpy.identify(mli)
 
-    return {'type': observationType,
+    return {'type': chirpy.observationType,
             'timestamp': timestamp,
             'nodeIdentifier': node,
             'id': int(mli),
@@ -65,7 +61,7 @@ def isObservation(message):
     @returns: True if the message is an observation."""
     if isinstance(message, str):
         message = json.loads(message)
-    return message.get("type", None) == observationType
+    return message.get("type", None) == chirpy.observationType
 
 
 def printObservation(timestamp, mli, confidence, node, str = stdout):

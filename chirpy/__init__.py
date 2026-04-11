@@ -55,6 +55,13 @@ logger = logging.getLogger(scriptName)
 logging.basicConfig(level=config.logLevel)
 
 
+# ---------- Message types ----------
+
+sampleType : str = "sample"
+observationType : str = "observation"
+heartbeatType : str = "heartbeat"
+
+
 # ---------- API ----------
 
 from . import logger
