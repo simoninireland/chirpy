@@ -11,7 +11,7 @@ Configuration values
 - The values can be set programmatically by accessing variables in the
   ``chirpy.config`` module
 - Some values can also be set from a program's environment by setting
-  corresponding environment variables.
+  corresponding environment variables
 
 The use of environment variables is recommended. This allows all tools
 in a pipeline to easily share a configuration so that, for example,
@@ -44,30 +44,6 @@ However, for systems with lots of sensors spread over an area, or
 where the exact locations of the observations are important, providing
 a more precise location may be useful.
 
-System tuning
--------------
-
-These tuning values all have sensible defaults.
-
-+-------------------------+--------------------+---------------------------------------+----------------------+
-| Variable                | Default            | Description                           | Environment variable |
-+=========================+====================+=======================================+======================+
-| ``logLevel``            | ``logging.INFO``   | Log level                             | ``CHIRPY_LOG_LEVEL`` |
-+-------------------------+--------------------+---------------------------------------+----------------------+
-| ``sampleDuration``      | 5                  | Length of each acoustic sample (s)    |                      |
-+-------------------------+--------------------+---------------------------------------+----------------------+
-| ``confidenceThreshold`` | 0.2                | Minimal confidence for an             |                      |
-|                         |                    | observation to be reported            |                      |
-+-------------------------+--------------------+---------------------------------------+----------------------+
-| ``nighttimeOffset``     | 60                 | Time in minutes from sunrise/sunset   |                      |
-|                         |                    | considered to be night-time           |                      |
-+-------------------------+--------------------+---------------------------------------+----------------------+
-
-The ``CHIRPY_LOG_LEVEL`` value can be a number or an expression. It is
-evaluated in an environment where the ``logging`` module is imported,
-so a value such as "logging.CRITICAL" will set the logging level to
-``logging.CRITICAL``.
-
 .. _mqtt-config:
 
 MQTT broker
@@ -94,13 +70,15 @@ These values are used only when reporting observations *via* a
 Meshtastic mesh network. The Meshtastic device used as gateway can be
 identified either by a hostname or by a local serial device.
 
-+----------------+-------------+------------------------------------------+----------------------+
-| Variable       | Default     | Description                              | Environment variable |
-+================+=============+==========================================+======================+
-| ``meshHost``   | None        | Meshtastic device hostname or IP address | ``CHIRPY_MESH_HOST`` |
-+----------------+-------------+------------------------------------------+----------------------+
-| ``meshPort``   | None        | Meshtastic device serial port            | ``CHIRPY_MESH_PORT`` |
-+----------------+-------------+------------------------------------------+----------------------+
++-----------------+-------------+------------------------------------------+-------------------------+
+| Variable        | Default     | Description                              |  Environment variable   |
++=================+=============+==========================================+=========================+
+| ``meshHost``    | None        | Meshtastic device hostname or IP address |  ``CHIRPY_MESH_HOST``   |
++-----------------+-------------+------------------------------------------+-------------------------+
+| ``meshPort``    | None        | Meshtastic device serial port            | ``CHIRPY_MESH_PORT``    |
++-----------------+-------------+------------------------------------------+-------------------------+
+| ``meshChannel`` | None        | Meshtastic channel                       | ``CHIRPY_MESH_CHANNEL`` |
++-----------------+-------------+------------------------------------------+-------------------------+
 
 SQLite database
 ---------------
@@ -112,6 +90,33 @@ These variables set up the SQLite database used for storing observations.
 +===================+==================+=======================================+======================+
 | ``sqlitedb``      | "chirpy.db"      | File name for SQLite database         | ``CHIRPY_SQLITE_DB`` |
 +-------------------+------------------+---------------------------------------+----------------------+
+
+System tuning
+-------------
+
+These tuning values all have sensible defaults.
+
++-------------------------+--------------------+----------------------------------------+----------------------+
+| Variable                | Default            | Description                            | Environment variable |
++=========================+====================+========================================+======================+
+| ``logLevel``            | ``logging.INFO``   | Log level                              | ``CHIRPY_LOG_LEVEL`` |
++-------------------------+--------------------+----------------------------------------+----------------------+
+| ``sampleDuration``      | 5                  | Length of each acoustic sample (s)     |                      |
++-------------------------+--------------------+----------------------------------------+----------------------+
+| ``confidenceThreshold`` | 0.2                | Minimal confidence for an              |                      |
+|                         |                    | observation to be reported             |                      |
++-------------------------+--------------------+----------------------------------------+----------------------+
+| ``nighttimeOffset``     | 60                 | Time from sunrise/sunset considered    |                      |
+|                         |                    | to be night-time (min)                 |                      |
++-------------------------+--------------------+----------------------------------------+----------------------+
+| ``heartbeat``           | 5 * 60             | Interval between heartbeats (s)        |                      |
++-------------------------+--------------------+----------------------------------------+----------------------+
+
+The ``CHIRPY_LOG_LEVEL`` value can be a number or an expression. It is
+evaluated in an environment where the ``logging`` module is imported,
+so a value such as "logging.CRITICAL" will set the logging level to
+``logging.CRITICAL``.
+
 
 
 .. _St Andrews: https://en.wikipedia.org/wiki/St_Andrews

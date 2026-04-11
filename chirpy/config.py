@@ -48,3 +48,4 @@ logLevel = logging.INFO
 sampleDuration = 5
 confidenceThreshold = 0.2
 nighttimeOffset = 60
+heartbeat = 5 * 60

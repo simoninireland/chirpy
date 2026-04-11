@@ -182,6 +182,19 @@ The start and end times accept strings in any format accepted by the
 `dateutil`_ package, for example "10:33" to a time today or "9 feb"
 for a specific date.
 
+``chirpy-heartbeat``
+--------------------
+
+This script generates periodic "heartbeat" messages to indicate that
+the node is still alive.
+
++-------------------------+-------------------------------+----------------------+
+| Option                  | Description                   | Default              |
++=========================+===============================+======================+
+| - ``--interval`` <time> | Interval in seconds           | ``config.heartbeat`` |
+| - ``-t`` <time>         |                               |                      |
++-------------------------+-------------------------------+----------------------+
+
 
 .. _dateutil: https://dateutil.readthedocs.io/en/stable/
 
