@@ -60,12 +60,12 @@ def main():
     chirpy.logger.info(f"Starting heartbeats every {t}s")
 
     while(True):
-        sleep(t)
-
         hb = heartbeat()
         print(json.dumps(hb))
         print()
         stdout.flush()
+
+        sleep(t)
 
 
 if __name__ == "__main__":
