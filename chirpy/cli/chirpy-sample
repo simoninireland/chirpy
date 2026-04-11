@@ -97,12 +97,12 @@ def main():
                 # (similarly, advance tomorrow by one day)
                 tomorrow = now + timedelta(days=1)
                 sunrise = sun.get_sunrise_time(tomorrow, tz) - offset
-                sunset = sun.get_sunset_time(tomorrow + timedelta(days=1), tz) + offset
 
                 # pause until sunrise
                 chirpy.logger.info(f"Sleeping until {sunrise} (time is now {now})")
                 sleepUntil(sunrise)
                 now = datetime.now(tz)
+                sunset = sun.get_sunset_time(now + timedelta(days=1), tz) + offset
                 chirpy.logger.info(f"Sampling until {sunset} (time is now {now})")
 
             # take a sample
